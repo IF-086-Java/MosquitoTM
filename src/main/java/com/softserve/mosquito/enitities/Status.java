@@ -1,7 +1,7 @@
 package com.softserve.mosquito.enitities;
 
 public enum Status {
-    READY(1L), IN_PROGRESS(2L), DONE(3L);
+    TODO(1L), DOING(2L), DONE(3L);
 
 
     private final Long statusNumber;
