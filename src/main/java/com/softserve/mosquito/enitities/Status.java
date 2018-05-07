@@ -1,14 +1,16 @@
 package com.softserve.mosquito.enitities;
 
 public enum Status {
-    READY(1), IN_PROGRESS (2), DONE(3);
+    READY(1L), IN_PROGRESS(2L), DONE(3L);
 
 
-    public final int statusNumber;
+    private final Long statusNumber;
 
-    Status(int statNumber) {
+    Status(Long statNumber) {
         statusNumber = statNumber;
     }
 
-
+    public Long getStatusNumber() {
+        return statusNumber;
+    }
 }
