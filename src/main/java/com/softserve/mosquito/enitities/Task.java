@@ -8,8 +8,8 @@ public class Task {
     private Long ownerId;
     private Long workerId;
     private String name;
-    private Status status;
-    private Priority priority;
+    private Status status = Status.TODO;
+    private Priority priority = Priority.MIDDLE;
     private Estimation estimation;
     private List<Comment> comments;
     
