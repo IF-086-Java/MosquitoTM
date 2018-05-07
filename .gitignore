@@ -151,14 +151,15 @@ modules.xml
 *.tar.gz
 *.rar
 
-# App generated files
-doctors.txt
-schedule.txt
-patients.txt
-
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+#Added manually
+.target/
+target/
+
+added manually
 
 # End of https://www.gitignore.io/api/java,eclipse,intellij+all
+
 
