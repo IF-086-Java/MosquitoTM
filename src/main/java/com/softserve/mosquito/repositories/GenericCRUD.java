@@ -2,15 +2,15 @@ package com.softserve.mosquito.repositories;
 
 import java.util.Collection;
 
-public interface GenericCRUD<Obj extends Identificator> {
+public interface GenericCRUD<T> {
 
-    Obj create(Obj obj);
+    T create(T T);
 
-    Obj read(Long id);
+    T read(Long id);
 
-    Collection<Obj> readAll();
+    Collection<T> readAll();
 
-    boolean update(Obj obj);
+    T update(T T);
 
-    boolean delete(Long id);
+    void delete(Long id);
 }

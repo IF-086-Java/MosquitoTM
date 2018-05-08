@@ -1,7 +1,5 @@
 package com.softserve.mosquito.enitities;
 
-import com.softserve.mosquito.repositories.Identificator;
-
 import java.util.List;
 
 public class Estimation implements Identificator {
