@@ -2,7 +2,7 @@ package com.softserve.mosquito.enitities;
 
 import java.util.List;
 
-public class Estimation implements Identificator {
+public class Estimation {
     private Long id;
     private int estimation;
     private int remaining;
@@ -55,5 +55,15 @@ public class Estimation implements Identificator {
 
     public void setLogs(List<LogWork> logs) {
         this.logs = logs;
+    }
+
+    @Override
+    public String toString() {
+        return "Estimation{" +
+                "id=" + id +
+                ", estimation=" + estimation +
+                ", remaining=" + remaining +
+                ", logs=" + logs +
+                '}';
     }
 }
