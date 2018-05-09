@@ -11,20 +11,22 @@ public class Estimation {
 
     /**
      * DB Insert constructor
-     * @param estimation - Reserved time for task (in hours)
-     * @param remaining - Time for task that remains (in hours)
      */
-    public Estimation(int estimation, int remaining) {
+    public Estimation(int estimation) {
+        this.id = 0L;
         this.estimation = estimation;
-        this.remaining = remaining;
+        this.remaining = estimation;
         this.logs = new ArrayList<>();
     }
 
+    /**
+     * @param estimation - Reserved time for task (in hours)
+     * @param remaining  - Time for task that remains (in hours)
+     */
     public Estimation(Long id, int estimation, int remaining) {
+        this(estimation);
         this.id = id;
-        this.estimation = estimation;
         this.remaining = remaining;
-        this.logs = new ArrayList<>();
     }
 
     public Long getId() {
