@@ -1,5 +1,6 @@
 package com.softserve.mosquito.enitities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Estimation {
@@ -16,13 +17,14 @@ public class Estimation {
     public Estimation(int estimation, int remaining) {
         this.estimation = estimation;
         this.remaining = remaining;
+        this.logs = new ArrayList<>();
     }
 
-    public Estimation(Long id, int estimation, int remaining, List<LogWork> logs) {
+    public Estimation(Long id, int estimation, int remaining) {
         this.id = id;
         this.estimation = estimation;
         this.remaining = remaining;
-        this.logs = logs;
+        this.logs = new ArrayList<>();
     }
 
     public Long getId() {

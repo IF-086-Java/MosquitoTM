@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 
 public class LogWork {
-
     private Long id;
     private String logDescription;
     private LocalDateTime createdDate;
