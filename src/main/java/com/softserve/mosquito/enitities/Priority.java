@@ -1,11 +1,15 @@
 package com.softserve.mosquito.enitities;
 
 public enum Priority {
-    LOW(1), MIDDLE(2), HIGH(3);
+    LOW(1L), MIDDLE(2L), HIGH(3L);
 
-    public final int priorityNumber;
+    private final Long priorityNumber;
 
-    Priority(int priorNumber) {
+    public Long getPriorityNumber() {
+        return priorityNumber;
+    }
+
+    Priority(Long priorNumber) {
         priorityNumber = priorNumber;
     }
 }
