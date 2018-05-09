@@ -1,44 +1,38 @@
 package com.softserve.mosquito.enitities;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 public class LogWork {
 
     private Long id;
     private String logDescription;
-    private Date createdDate;
+    private LocalDateTime createdDate;
     private Long userId;
-    private int commitLog;
+    private int loggedTime;
     private Long estimationId;
 
 
-    public LogWork(Long id, String logDescription,
-                   Date createdDate, Long userId,
-                   int commitLog, Long estimationId) {
+    public LogWork(Long id, String logDescription, Long userId,
+                   int loggedTime, Long estimationId) {
         this.id = id;
         this.logDescription = logDescription;
-        this.createdDate = createdDate;
+        this.createdDate = LocalDateTime.now();
         this.userId = userId;
-        this.commitLog = commitLog;
+        this.loggedTime = loggedTime;
         this.estimationId = estimationId;
 
     }
 
     public LogWork(Long id, Long userId, Long estimationId) {
         this.id = id;
+        this.createdDate = LocalDateTime.now();
         this.userId = userId;
         this.estimationId = estimationId;
     }
 
-    public LogWork() {
-    }
-
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getLogDescription() {
@@ -49,28 +43,20 @@ public class LogWork {
         this.logDescription = logDescription;
     }
 
-    public Date getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
     }
 
     public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public int getLoggedTime() {
+        return loggedTime;
     }
 
-    public int getCommitLog() {
-        return commitLog;
-    }
-
-    public void setCommitLog(int commitLog) {
-        this.commitLog = commitLog;
+    public void setLoggedTime(int loggedTime) {
+        this.loggedTime = loggedTime;
     }
 
     public Long getEstimationId() {
@@ -88,7 +74,7 @@ public class LogWork {
                 ", logDescription='" + logDescription + '\'' +
                 ", createdDate=" + createdDate +
                 ", userId=" + userId +
-                ", commitLog=" + commitLog +
+                ", loggedTime=" + loggedTime +
                 ", estimationId=" + estimationId +
                 '}';
     }
