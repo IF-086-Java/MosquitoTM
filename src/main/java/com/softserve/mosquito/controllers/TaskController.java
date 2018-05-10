@@ -25,43 +25,49 @@ public class TaskController {
 
     @POST
     @Consumes("text/plain")
-    public String createSubTaskOrProject(@QueryParam("parentId") String parentId) {
+    public String createSubTaskOrProject(@QueryParam("parentId") Long parentId) {
         return "Created task with ID " + parentId;
     }
 
     @GET
     @Path("/user-task")
-    public String getUserTasks(@QueryParam("workerId") String workerId) {
+    public String getUserTasks(@QueryParam("workerId") Long workerId) {
         return "User tasks " + workerId;
     }
 
     @GET
     @Path("/owner-task")
-    public String getOwnerTasks(@QueryParam("ownerId") String ownerId) {
+    public String getOwnerTasks(@QueryParam("ownerId") Long ownerId) {
         return "Owner id " + ownerId;
     }
 
     @GET
     @Path("{taskId}")
-    public String getTaskById(@PathParam("taskId") String taskId) {
+    public String getTaskById(@PathParam("taskId") Long taskId) {
         return "Got task with id " + taskId;
     }
 
     @PUT
     @Path("/{taskId}")
-    public String updateTask(@PathParam("taskId") String taskId) {
+    public String updateTask(@PathParam("taskId") Long taskId) {
         return "Task updated " + taskId;
     }
 
     @GET
-    public String getSubTaskOrProject(@QueryParam("parentId") String parentId) {
+    public String getSubTaskOrProject(@QueryParam("parentId") Long parentId) {
         return "Got subTask/project for ID " + parentId;
     }
 
     @DELETE
     @Path("/{taskId}")
-    public String deleteTask(@PathParam("taskId") String taskId) {
+    public String deleteTask(@PathParam("taskId") Long taskId) {
         return "Deleted task with id " + taskId;
+    }
+
+    @GET
+    @Path("/status")
+    public String getTaskByStatus(@QueryParam("taskStatus")Long statusId){
+        return "Got task with status id " + statusId;
     }
 
     @GET

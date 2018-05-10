@@ -8,25 +8,25 @@ public class LogWorkController {
 
     @GET
     @Path("/{taskId}/log-works")
-    public String getLogWorksForTask(@PathParam("taskId") String taskId) {
+    public String getLogWorksForTask(@PathParam("taskId") Long taskId) {
         return "Got log-works for task with id " + taskId;
     }
 
     @POST
     @Path("/{taskId}/log-works")
-    public String createLogWork(@PathParam("taskId") String taskId) {
+    public String createLogWork(@PathParam("taskId") Long taskId) {
         return "Created log-work for task with ID " + taskId;
     }
 
     @PUT
     @Path("/{taskId}/log-works")
-    public String updateLogWorksForTask(@PathParam("taskId") String taskId) {
+    public String updateLogWorksForTask(@PathParam("taskId") Long taskId) {
         return "Updated log-work for task with ID " + taskId;
     }
 
     @DELETE
     @Path("/{taskId}/log-works")
-    public String deleteLogWorksForTask(@PathParam("taskId") String taskId) {
+    public String deleteLogWorksForTask(@PathParam("taskId") Long taskId) {
         return "Deleted log-work for task with ID " + taskId;
     }
 }
