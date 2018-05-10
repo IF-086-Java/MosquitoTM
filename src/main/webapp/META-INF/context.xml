@@ -1,0 +1,14 @@
+<Context path="/*" docBase="MosquitoTM"
+   crossContext="true" reloadable="true" debug="1">
+
+  <Resource name="jdbc/mosquitoDB" 
+  			auth="Container" type="javax.sql.DataSource"
+        maxIdle="10" maxWait="10000"
+        maxTotal="10" removeAbandonedTimeout="300" 
+        defaultAutoCommit="true"
+        factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+        username="sql7234875" password="Th8hPT4tYH" 
+        driverClassName="com.mysql.cj.jdbc.Driver"
+        url="jdbc:mysql://52.29.239.198:3306/sql7234875"/>
+
+</Context>

@@ -34,6 +34,20 @@ public class Task {
 		this.priority = priority;
 		this.estimation = estimation;
 	}
+	
+	/** DB Select constructor */
+	public Task(Long id, Long parentId, Long ownerId, Long workerId, String name, Status status, Priority priority,
+			Estimation estimation) {
+		super();
+		this.id = id;
+		this.parentId = parentId;
+		this.ownerId = ownerId;
+		this.workerId = workerId;
+		this.name = name;
+		this.status = status;
+		this.priority = priority;
+		this.estimation = estimation;
+	}
 
 	public Task(Long id, Long parentId, Long ownerId, Long workerId, String name, Status status, Priority priority,
 			Estimation estimation, List<Comment> comments) {
