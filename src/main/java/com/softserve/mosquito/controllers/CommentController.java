@@ -1,7 +1,5 @@
 package com.softserve.mosquito.controllers;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -33,6 +31,13 @@ public class CommentController {
 		return "Returned all comments for task with ID: " + taskId;
 	}
 	
+	@GET
+	@Path("/{taskId}/comments/{commentId}")
+	@Produces({MediaType.TEXT_PLAIN})
+	public String getCommentsByCommentId(@PathParam("commentId") long commentId){
+		return "Returned comment with ID: " + commentId;
+	}
+	
 	@PUT
 	@Path("/{taskId}/comments/{commentId}")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -47,6 +52,6 @@ public class CommentController {
 	@Path("/{taskId}/comments/{commentId}")
 	public String deletComments(@PathParam("taskId") long taskId,
 			@PathParam("commentId") long commentId){
-		return "Updated comment with ID:" + commentId + " (taskId: " + taskId + ")";
+		return "Deleted comment with ID:" + commentId + " (taskId: " + taskId + ")";
 	}
 }
