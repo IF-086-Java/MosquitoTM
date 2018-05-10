@@ -1,8 +1,9 @@
 package com.softserve.mosquito.enitities;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Estimation implements Identificator {
+public class Estimation {
     private Long id;
     private int estimation;
     private int remaining;
@@ -10,19 +11,22 @@ public class Estimation implements Identificator {
 
     /**
      * DB Insert constructor
-     * @param estimation - Reserved time for task (in hours)
-     * @param remaining - Time for task that remains (in hours)
      */
-    public Estimation(int estimation, int remaining) {
+    public Estimation(int estimation) {
+        this.id = 0L;
         this.estimation = estimation;
-        this.remaining = remaining;
+        this.remaining = estimation;
+        this.logs = new ArrayList<>();
     }
 
-    public Estimation(Long id, int estimation, int remaining, List<LogWork> logs) {
+    /**
+     * @param estimation - Reserved time for task (in hours)
+     * @param remaining  - Time for task that remains (in hours)
+     */
+    public Estimation(Long id, int estimation, int remaining) {
+        this(estimation);
         this.id = id;
-        this.estimation = estimation;
         this.remaining = remaining;
-        this.logs = logs;
     }
 
     public Long getId() {
@@ -55,5 +59,15 @@ public class Estimation implements Identificator {
 
     public void setLogs(List<LogWork> logs) {
         this.logs = logs;
+    }
+
+    @Override
+    public String toString() {
+        return "Estimation{" +
+                "id=" + id +
+                ", estimation=" + estimation +
+                ", remaining=" + remaining +
+                ", logs=" + logs +
+                '}';
     }
 }
