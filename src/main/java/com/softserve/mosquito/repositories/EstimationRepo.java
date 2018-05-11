@@ -1,6 +1,7 @@
 package com.softserve.mosquito.repositories;
 
 import com.softserve.mosquito.enitities.Estimation;
+import com.softserve.mosquito.enitities.LogWork;
 
 import javax.ws.rs.core.Context;
 import java.sql.*;
@@ -20,8 +21,31 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
 
         try {
             while (rs.next()) {
-                estimations.add(new Estimation(rs.getLong("estimation_id"),
-                        rs.getInt("estimation"), rs.getInt("remaining")));
+                Estimation estimation = new Estimation(rs.getLong("estimation_id"),
+                        rs.getInt("estimation"), rs.getInt("remaining"));
+                boolean isEstimation = false;
+
+                if (rs.getLong("log_work_id") != 0) {
+                    LogWork log = new LogWork(rs.getLong("log_work_id"),
+                            rs.getString("log_description"),
+                            rs.getTimestamp("created_date").toLocalDateTime(),
+                            rs.getLong("user_id"), rs.getInt("logged_time"),
+                            rs.getLong("estimation_id"));
+
+                    for (Estimation item : estimations) {
+                        if (item.getId().equals(estimation.getId())) {
+                            item.getLogs().add(log);
+                            isEstimation = true;
+                            break;
+                        }
+                    }
+                    if (!isEstimation) {
+                        estimation.getLogs().add(log);
+                    }
+                }
+                if (!isEstimation) {
+                    estimations.add(estimation);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,7 +81,8 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
 
     @Override
     public Estimation read(Long id) {
-        String query = "SELECT * FROM estimations WHERE estimation_id=" + id + ";";
+        String query = "SELECT * FROM estimations LEFT JOIN log_works USING(estimation_id) " +
+                "WHERE estimation_id=" + id + ";";
         Estimation temp = null;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -103,7 +128,7 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
 
     @Override
     public List<Estimation> readAll() {
-        String query = "SELECT * FROM estimations;";
+        String query = "SELECT * FROM estimations LEFT JOIN log_works USING(estimation_id);";
         List<Estimation> estimations = null;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {

@@ -30,6 +30,17 @@ public class LogWork {
         this.estimationId = estimationId;
     }
 
+    public LogWork(Long id, String logDescription, LocalDateTime createdDate, Long userId,
+                   int loggedTime, Long estimationId) {
+        this.id = id;
+        this.logDescription = logDescription;
+        this.createdDate = createdDate;
+        this.userId = userId;
+        this.loggedTime = loggedTime;
+        this.estimationId = estimationId;
+
+    }
+
     public Long getId() {
         return id;
     }
