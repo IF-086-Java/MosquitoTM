@@ -21,21 +21,19 @@ public class UserRepo implements GenericCRUD<User> {
 
     @Override
     public User create(User user) {
-        String sqlQuery = "insert into users (email, firstName, lastName, password)"
-                + "values (?, ?, ?, ?)";
-        PreparedStatement ps = null;
+        String sqlQuery = "INSERT INTO users (email, firstName, lastName, password) + VALUES (?, ?, ?, ?)";
         try (Connection connection = datasource.getConnection()){
-            ps = connection.prepareStatement(sqlQuery);
-            ps.setString(1, user.getEmail());
-            ps.setString(2, user.getFirstName());
-            ps.setString(3, user.getLastName());
-            ps.setString(4, user.getPassword());
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+            preparedStatement.setString(1, user.getEmail());
+            preparedStatement.setString(2, user.getFirstName());
+            preparedStatement.setString(3, user.getLastName());
+            preparedStatement.setString(4, user.getPassword());
 
-            int affectedRows = ps.executeUpdate();
+            int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
                 LOGGER.error("Creating user failed, no rows affected");
             }
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     return read(generatedKeys.getLong(1));
                 } else {
@@ -50,15 +48,11 @@ public class UserRepo implements GenericCRUD<User> {
 
     @Override
     public User read(Long id) {
-        String sqlQuery = "select "
-                + "email, firstName, lastName, password"
-                + "from users user "
-                + "where user.user_id = ?";
-        PreparedStatement ps = null;
+        String sqlQuery = "SELECT email, firstName, lastName, password + FROM users WHERE user.user_id = ?";
         try (Connection connection = datasource.getConnection()){
-            ps = connection.prepareStatement(sqlQuery);
-            ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+            preparedStatement.setLong(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
 
             return new User(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
 
@@ -70,17 +64,17 @@ public class UserRepo implements GenericCRUD<User> {
 
     @Override
     public User update(User user) {
-        String sqlQuery = "update users set email = ?, firstName = ?, lastName = ?, password = ? where user_id = ?";
-        PreparedStatement ps = null;
+        String sqlQuery = "UPDATE users SET email = ?, firstName = ?, lastName = ?, password = ? WHERE user_id = ?";
+        PreparedStatement preparedStatement = null;
         try (Connection connection = datasource.getConnection()){
-            ps = connection.prepareStatement(sqlQuery);
-            ps.setString(1, user.getEmail());
-            ps.setString(2, user.getFirstName());
-            ps.setString(3, user.getLastName());
-            ps.setString(4, user.getPassword());
-            ps.setLong(5, user.getId());
+            preparedStatement = connection.prepareStatement(sqlQuery);
+            preparedStatement.setString(1, user.getEmail());
+            preparedStatement.setString(2, user.getFirstName());
+            preparedStatement.setString(3, user.getLastName());
+            preparedStatement.setString(4, user.getPassword());
+            preparedStatement.setLong(5, user.getId());
 
-            int updatedRows = ps.executeUpdate();
+            int updatedRows = preparedStatement.executeUpdate();
             if (updatedRows > 0) {
                 return read(user.getId());
             }
@@ -92,11 +86,11 @@ public class UserRepo implements GenericCRUD<User> {
 
     @Override
     public void delete(User user) {
-        String sqlQuery = "delete users where user_id = ?";
+        String sqlQuery = "DELETE users WHERE user_id = ?";
         try (Connection connection = datasource.getConnection()){
-            PreparedStatement ps = connection.prepareStatement(sqlQuery);
-            ps.setLong(1, user.getId());
-            ps.executeUpdate();
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+            preparedStatement.setLong(1, user.getId());
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error(e);
         }
@@ -105,14 +99,11 @@ public class UserRepo implements GenericCRUD<User> {
 
     @Override
     public List<User> readAll() {
-        String sqlQuery = "select "
-                + "email, firstName, lastName, password"
-                + "from users";
-        PreparedStatement ps = null;
+        String sqlQuery = "SELECT + email, firstName, lastName, password FROM users";
         List<User> users = new ArrayList<>();
         try (Connection connection = datasource.getConnection()){
-            ps = connection.prepareStatement(sqlQuery);
-            ResultSet rs = ps.executeQuery();
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+            ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 users.add(new User(rs.getString(1), rs.getString(2), rs.getString(3),	rs.getString(4)));
             }
