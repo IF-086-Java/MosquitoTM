@@ -2,6 +2,7 @@ package com.softserve.mosquito.controllers;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 public class UserController {
 	
 	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String creareUser(@FormParam("email") String email,
 			@FormParam("first_name") String firstName,
@@ -43,6 +45,7 @@ public class UserController {
 	
 	@PUT
 	@Path("/{userId}")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateUser(@PathParam("userId") long userId,
 			@FormParam("email") String email,
