@@ -93,9 +93,8 @@ public class UserRepo implements GenericCRUD<User> {
     @Override
     public void delete(User user) {
         String sqlQuery = "delete users where user_id = ?";
-        PreparedStatement ps = null;
         try (Connection connection = datasource.getConnection()){
-            ps = connection.prepareStatement(sqlQuery);
+            PreparedStatement ps = connection.prepareStatement(sqlQuery);
             ps.setLong(1, user.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -108,14 +107,14 @@ public class UserRepo implements GenericCRUD<User> {
     public List<User> readAll() {
         String sqlQuery = "select "
                 + "email, firstName, lastName, password"
-                + "from users user ";
+                + "from users";
         PreparedStatement ps = null;
         List<User> users = new ArrayList<>();
         try (Connection connection = datasource.getConnection()){
             ps = connection.prepareStatement(sqlQuery);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                users.add(new User(rs.getString(1), rs.getString(2), rs.getString(3),	rs.getString(4));
+                users.add(new User(rs.getString(1), rs.getString(2), rs.getString(3),	rs.getString(4)));
             }
             return users;
         } catch (SQLException e) {

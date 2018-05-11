@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import com.softserve.mosquito.enitities.*;
 
 public class TaskRepo implements GenericCRUD<Task> {
-	Logger LOGGER = Logger.getLogger(TaskRepo.class); 
+	private static final Logger LOGGER = Logger.getLogger(TaskRepo.class);
 	private DataSource datasource = MySqlDataSource.getDataSource();
 	
 	@Override

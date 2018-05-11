@@ -8,12 +8,10 @@ import java.sql.Connection;
 import java.util.List;
 
 public class EstimationService {
-    private ServletContext context;
     private EstimationRepo repo;
 
-    public EstimationService(ServletContext context) {
-        this.context = context;
-        this.repo = new EstimationRepo((Connection) context.getAttribute("DBConnection"));
+    public EstimationService() {
+        this.repo = new EstimationRepo();
     }
 
     public List<Estimation> getAllEstimations() {

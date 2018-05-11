@@ -13,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import com.softserve.mosquito.enitities.Task;
+import com.softserve.mosquito.repositories.TaskRepo;
 
 /**
  * Task controller : JAX-RS + MySql + JSON test.
@@ -20,8 +21,6 @@ import com.softserve.mosquito.enitities.Task;
 
 @Path("/tasks")
 public class TaskController {
-    @Context
-    ServletContext context;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -51,7 +50,7 @@ public class TaskController {
     }
 
     @GET
-    @Path("{taskId}")
+    @Path("/{taskId}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getTaskById(@PathParam("taskId") Long taskId) {
         return "Got task with id " + taskId;
@@ -73,6 +72,7 @@ public class TaskController {
     }
 
     @GET
+    @Path("/parent")
     @Produces(MediaType.TEXT_PLAIN)
     public String getSubTaskOrProject(@QueryParam("parentId") Long parentId) {
         return "Got subTask/project for ID " + parentId;
@@ -95,23 +95,7 @@ public class TaskController {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<Task> testAllTasks() {
-
-        //TODO move to service, repo. It's just DB test...
-        List<Task> tasks = new ArrayList<>();
-        Connection connection = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
-            connection = (Connection) context.getAttribute("DBConnection");
-            stmt = connection.createStatement();
-            rs = stmt.executeQuery("select task_id, name from tasks");
-            while (rs.next()) {
-                tasks.add(new Task(rs.getLong("task_id"), rs.getString("name")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return tasks;
+        TaskRepo taskRepo = new TaskRepo();
+        return taskRepo.readAll();
     }
 }
