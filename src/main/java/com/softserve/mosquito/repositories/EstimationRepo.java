@@ -2,19 +2,19 @@ package com.softserve.mosquito.repositories;
 
 import com.softserve.mosquito.enitities.Estimation;
 import com.softserve.mosquito.enitities.LogWork;
+import org.apache.log4j.Logger;
 
-import javax.ws.rs.core.Context;
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class EstimationRepo implements GenericCRUD<Estimation> {
-    private Connection connection;
-
-    public EstimationRepo(Connection connection) {
-        this.connection = connection;
-    }
+    Logger log = Logger.getLogger(EstimationRepo.class);
+    private DataSource datasource = MySqlDataSource.getDataSource();
 
     private List<Estimation> parsData(ResultSet rs) {
         List<Estimation> estimations = new ArrayList<>();
@@ -58,39 +58,39 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
         String query = "INSERT INTO estimations (estimation,remaining) VALUE (?,?);";
         Estimation temp = null;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = datasource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, estimation.getEstimation());
             statement.setInt(2, estimation.getRemaining());
             int updatedRow = statement.executeUpdate();
-            if (updatedRow != 1) throw new SQLException("Object have not being created");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            if (updatedRow != 1) throw new SQLException("Creating estimation failed, no rows affected");
 
-        query = "SELECT * FROM estimations WHERE estimation_id=(SELECT last_insert_id());";
-
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            List<Estimation> result = parsData(statement.executeQuery());
-            if (result.size() != 1) throw new SQLException("Error with searching created object");
-            temp = result.iterator().next();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next())
+                    return read(generatedKeys.getLong(1));
+                else
+                    throw new SQLException("Creating user failed, no ID obtained.");
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
+            return null;
         }
-        return temp;
     }
 
     @Override
     public Estimation read(Long id) {
         String query = "SELECT * FROM estimations LEFT JOIN log_works USING(estimation_id) " +
-                "WHERE estimation_id=" + id + ";";
+                "WHERE estimation_id=?;";
         Estimation temp = null;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = datasource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setLong(1, id);
             List<Estimation> result = parsData(statement.executeQuery());
             if (result.size() != 1) throw new SQLException("Error with searching object by id");
             temp = result.iterator().next();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return temp;
     }
@@ -99,14 +99,15 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
     public Estimation update(Estimation estimation) {
         String query = "UPDATE estimations SET estimation=?, remaining=? WHERE estimation_id=?;";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = datasource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(2, estimation.getEstimation());
             statement.setInt(3, estimation.getRemaining());
             statement.setLong(3, estimation.getId());
             int updatedRow = statement.executeUpdate();
             if (updatedRow != 1) throw new SQLException("Object have not being updated");
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return estimation;
     }
@@ -115,14 +116,15 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
     public void delete(Estimation estimation) {
         String query = "DELETE FROM estimations WHERE estimation_id=? AND estimation=? AND remaining = ?;";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = datasource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(query);
             statement.setLong(1, estimation.getId());
             statement.setInt(2, estimation.getEstimation());
             statement.setInt(3, estimation.getRemaining());
             int updatedRow = statement.executeUpdate();
             if (updatedRow != 1) throw new SQLException("Object have not being deleted");
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -131,10 +133,11 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
         String query = "SELECT * FROM estimations LEFT JOIN log_works USING(estimation_id);";
         List<Estimation> estimations = null;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = datasource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(query);
             estimations = parsData(statement.executeQuery());
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return estimations;
     }
