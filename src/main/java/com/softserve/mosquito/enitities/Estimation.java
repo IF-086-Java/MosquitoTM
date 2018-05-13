@@ -9,14 +9,20 @@ public class Estimation {
     private int remaining;
     private List<LogWork> logs;
 
+    public Estimation() {
+        this.id = 0L;
+        this.estimation = 0;
+        this.remaining = 0;
+        this.logs = new ArrayList<>();
+    }
+
     /**
      * DB Insert constructor
      */
     public Estimation(int estimation) {
-        this.id = 0L;
+        this();
         this.estimation = estimation;
         this.remaining = estimation;
-        this.logs = new ArrayList<>();
     }
 
     /**

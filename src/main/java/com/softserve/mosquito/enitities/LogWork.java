@@ -6,26 +6,24 @@ import java.time.LocalDateTime;
 public class LogWork {
     private Long id;
     private String logDescription;
+    private int loggedTime;
     private LocalDateTime createdDate;
     private Long userId;
-    private int loggedTime;
     private Long estimationId;
 
-
-    public LogWork(Long id, String logDescription, Long userId,
-                   int loggedTime, Long estimationId) {
-        this.id = id;
-        this.logDescription = logDescription;
+    public LogWork() {
+        this.id = 0L;
+        this.logDescription = "";
+        this.loggedTime = 0;
         this.createdDate = LocalDateTime.now();
-        this.userId = userId;
-        this.loggedTime = loggedTime;
-        this.estimationId = estimationId;
-
+        this.userId = 0L;
+        this.estimationId = 0L;
     }
 
-    public LogWork(Long id, Long userId, Long estimationId) {
-        this.id = id;
-        this.createdDate = LocalDateTime.now();
+    public LogWork(String logDescription, int loggedTime, Long userId, Long estimationId) {
+        this();
+        this.logDescription = logDescription;
+        this.loggedTime = loggedTime;
         this.userId = userId;
         this.estimationId = estimationId;
     }
@@ -45,6 +43,10 @@ public class LogWork {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getLogDescription() {
         return logDescription;
     }
@@ -53,20 +55,28 @@ public class LogWork {
         this.logDescription = logDescription;
     }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
     public int getLoggedTime() {
         return loggedTime;
     }
 
     public void setLoggedTime(int loggedTime) {
         this.loggedTime = loggedTime;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getEstimationId() {

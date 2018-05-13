@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EstimationRepo implements GenericCRUD<Estimation> {
-    Logger log = Logger.getLogger(EstimationRepo.class);
+    private final static Logger log = Logger.getLogger(EstimationRepo.class);
     private DataSource datasource = MySqlDataSource.getDataSource();
 
     private List<Estimation> parsData(ResultSet rs) {
@@ -21,16 +21,22 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
 
         try {
             while (rs.next()) {
-                Estimation estimation = new Estimation(rs.getLong("estimation_id"),
-                        rs.getInt("estimation"), rs.getInt("remaining"));
+                Estimation estimation = new Estimation();
                 boolean isEstimation = false;
 
+                estimation.setId(rs.getLong("estimation_id"));
+                estimation.setEstimation(rs.getInt("estimation"));
+                estimation.setRemaining(rs.getInt("remaining"));
+
                 if (rs.getLong("log_work_id") != 0) {
-                    LogWork log = new LogWork(rs.getLong("log_work_id"),
-                            rs.getString("log_description"),
-                            rs.getTimestamp("created_date").toLocalDateTime(),
-                            rs.getLong("user_id"), rs.getInt("logged_time"),
-                            rs.getLong("estimation_id"));
+                    LogWork log = new LogWork();
+                    log.setId(rs.getLong("log_work_id"));
+                    log.setLogDescription(rs.getString("log_description"));
+                    log.setLoggedTime(rs.getInt("logged_time"));
+                    log.setCreatedDate(rs.getTimestamp("created_date")
+                            .toLocalDateTime());
+                    log.setUserId(rs.getLong("user_id"));
+                    log.setEstimationId(rs.getLong("estimation_id"));
 
                     for (Estimation item : estimations) {
                         if (item.getId().equals(estimation.getId())) {
@@ -56,7 +62,6 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
     @Override
     public Estimation create(Estimation estimation) {
         String query = "INSERT INTO estimations (estimation,remaining) VALUE (?,?);";
-        Estimation temp = null;
 
         try (Connection connection = datasource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -81,18 +86,17 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
     public Estimation read(Long id) {
         String query = "SELECT * FROM estimations LEFT JOIN log_works USING(estimation_id) " +
                 "WHERE estimation_id=?;";
-        Estimation temp = null;
 
         try (Connection connection = datasource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setLong(1, id);
             List<Estimation> result = parsData(statement.executeQuery());
             if (result.size() != 1) throw new SQLException("Error with searching object by id");
-            temp = result.iterator().next();
+            return result.iterator().next();
         } catch (SQLException e) {
             log.error(e.getMessage());
+            return null;
         }
-        return temp;
     }
 
     @Override
@@ -131,14 +135,13 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
     @Override
     public List<Estimation> readAll() {
         String query = "SELECT * FROM estimations LEFT JOIN log_works USING(estimation_id);";
-        List<Estimation> estimations = null;
 
         try (Connection connection = datasource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(query);
-            estimations = parsData(statement.executeQuery());
+            return parsData(statement.executeQuery());
         } catch (SQLException e) {
             log.error(e.getMessage());
+            return null;
         }
-        return estimations;
     }
 }
