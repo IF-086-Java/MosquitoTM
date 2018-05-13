@@ -29,24 +29,24 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
                 estimation.setRemaining(rs.getInt("remaining"));
 
                 if (rs.getLong("log_work_id") != 0) {
-                    LogWork log = new LogWork();
-                    log.setId(rs.getLong("log_work_id"));
-                    log.setLogDescription(rs.getString("log_description"));
-                    log.setLoggedTime(rs.getInt("logged_time"));
-                    log.setCreatedDate(rs.getTimestamp("created_date")
+                    LogWork logWork = new LogWork();
+                    logWork.setId(rs.getLong("log_work_id"));
+                    logWork.setLogDescription(rs.getString("log_description"));
+                    logWork.setLoggedTime(rs.getInt("logged_time"));
+                    logWork.setCreatedDate(rs.getTimestamp("created_date")
                             .toLocalDateTime());
-                    log.setUserId(rs.getLong("user_id"));
-                    log.setEstimationId(rs.getLong("estimation_id"));
+                    logWork.setUserId(rs.getLong("user_id"));
+                    logWork.setEstimationId(rs.getLong("estimation_id"));
 
                     for (Estimation item : estimations) {
                         if (item.getId().equals(estimation.getId())) {
-                            item.getLogs().add(log);
+                            item.getLogWorks().add(logWork);
                             isEstimation = true;
                             break;
                         }
                     }
                     if (!isEstimation) {
-                        estimation.getLogs().add(log);
+                        estimation.getLogWorks().add(logWork);
                     }
                 }
                 if (!isEstimation) {
