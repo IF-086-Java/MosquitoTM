@@ -5,36 +5,35 @@ import java.time.LocalDateTime;
 
 public class LogWork {
     private Long id;
-    private String logDescription;
-    private int loggedTime;
-    private LocalDateTime createdDate;
+    private String description;
+    private int logged;
     private Long userId;
     private Long estimationId;
+    private LocalDateTime lastUpdate;
 
     public LogWork() {
         this.id = 0L;
-        this.logDescription = "";
-        this.loggedTime = 0;
-        this.createdDate = LocalDateTime.now();
+        this.description = "";
+        this.logged = 0;
         this.userId = 0L;
         this.estimationId = 0L;
     }
 
-    public LogWork(String logDescription, int loggedTime, Long userId, Long estimationId) {
+    public LogWork(String description, int logged, Long userId, Long estimationId) {
         this();
-        this.logDescription = logDescription;
-        this.loggedTime = loggedTime;
+        this.description = description;
+        this.logged = logged;
         this.userId = userId;
         this.estimationId = estimationId;
     }
 
-    public LogWork(Long id, String logDescription, LocalDateTime createdDate, Long userId,
-                   int loggedTime, Long estimationId) {
+    public LogWork(Long id, String description, int logged, Long userId,
+                   Long estimationId, LocalDateTime lastUpdate) {
         this.id = id;
-        this.logDescription = logDescription;
-        this.createdDate = createdDate;
+        this.description = description;
+        this.lastUpdate = lastUpdate;
         this.userId = userId;
-        this.loggedTime = loggedTime;
+        this.logged = logged;
         this.estimationId = estimationId;
 
     }
@@ -47,28 +46,20 @@ public class LogWork {
         this.id = id;
     }
 
-    public String getLogDescription() {
-        return logDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLogDescription(String logDescription) {
-        this.logDescription = logDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public int getLoggedTime() {
-        return loggedTime;
+    public int getLogged() {
+        return logged;
     }
 
-    public void setLoggedTime(int loggedTime) {
-        this.loggedTime = loggedTime;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
+    public void setLogged(int logged) {
+        this.logged = logged;
     }
 
     public Long getUserId() {
@@ -87,14 +78,22 @@ public class LogWork {
         this.estimationId = estimationId;
     }
 
+    public LocalDateTime getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
     @Override
     public String toString() {
         return "LogWork{" +
                 "id=" + id +
-                ", logDescription='" + logDescription + '\'' +
-                ", createdDate=" + createdDate +
+                ", description='" + description + '\'' +
+                ", lastUpdate=" + lastUpdate +
                 ", userId=" + userId +
-                ", loggedTime=" + loggedTime +
+                ", logged=" + logged +
                 ", estimationId=" + estimationId +
                 '}';
     }
