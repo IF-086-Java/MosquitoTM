@@ -7,13 +7,13 @@ public class Estimation {
     private Long id;
     private int estimation;
     private int remaining;
-    private List<LogWork> logs;
+    private List<LogWork> logWorks;
 
     public Estimation() {
         this.id = 0L;
         this.estimation = 0;
         this.remaining = 0;
-        this.logs = new ArrayList<>();
+        this.logWorks = new ArrayList<>();
     }
 
     /**
@@ -59,12 +59,12 @@ public class Estimation {
         this.remaining = remaining;
     }
 
-    public List<LogWork> getLogs() {
-        return logs;
+    public List<LogWork> getLogWorks() {
+        return logWorks;
     }
 
-    public void setLogs(List<LogWork> logs) {
-        this.logs = logs;
+    public void setLogWorks(List<LogWork> logWorks) {
+        this.logWorks = logWorks;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Estimation {
                 "id=" + id +
                 ", estimation=" + estimation +
                 ", remaining=" + remaining +
-                ", logs=" + logs +
+                ", logWorks=" + logWorks +
                 '}';
     }
 }
