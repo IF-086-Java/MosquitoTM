@@ -44,8 +44,7 @@ public class CommentRepo implements GenericCRUD<Comment> {
 
     @Override
     public Comment read(Long id) {
-        String sqlQuery = "SELECT * "
-                + " FROM comments WHERE comments.comment_id=" + id + ";";
+        String sqlQuery = "SELECT * FROM comments WHERE comments.comment_id=" + id + ";";
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sqlQuery);
