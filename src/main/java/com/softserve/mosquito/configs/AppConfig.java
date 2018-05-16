@@ -1,16 +1,16 @@
 package com.softserve.mosquito.configs;
 
-import org.apache.log4j.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+import java.util.HashMap;
+import java.util.Map;
 
 @ApplicationPath("/*")
 public class AppConfig extends Application {
-    private static final Logger LOGGER = Logger.getLogger(AppConfig.class);
+    private static final Logger LOGGER = LogManager.getLogger(AppConfig.class);
 
     @Override
     public Map<String, Object> getProperties() {

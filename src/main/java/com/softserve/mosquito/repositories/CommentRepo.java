@@ -1,7 +1,8 @@
 package com.softserve.mosquito.repositories;
 
 import com.softserve.mosquito.enitities.Comment;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -10,84 +11,82 @@ import java.util.List;
 
 public class CommentRepo implements GenericCRUD<Comment> {
 
-    private static final Logger LOGGER = Logger.getLogger(CommentRepo.class);
+    private static final Logger LOGGER = LogManager.getLogger(CommentRepo.class);
     private DataSource dataSource = MySqlDataSource.getDataSource();
 
-    @Override
-    public Comment create(Comment comment) {
-        String sqlQuery = "INSERT INTO comments (comment, user_id, task_id) VALUES(?,?,?); ";
+    private static final String CREATE_COMMENT = "INSERT INTO comments (text, task_id, author_id) VALUES(?,?,?);";
+    private static final String UPDATE_COMMENT = "UPDATE comments SET text=? WHERE comment_id =?;";
+    private static final String DELETE_COMMENT = "DELETE FROM comments WHERE comment_id=?";
+    private static final String READ_COMMENT = "SELECT * FROM comments WHERE comment_id=?;";
+    private static final String READ_ALL_COMMENT = "SELECT * FROM comments;";
 
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setString(1, comment.getText());
-            statement.setLong(2, comment.getAuthorId());
-            statement.setLong(3, comment.getTaskId());
+    private List<Comment> parsData(ResultSet resultSet) {
+        List<Comment> comments = new ArrayList<>();
 
-            int result = statement.executeUpdate();
-            if (result == 0) {
-                LOGGER.error("Creating comment failed! No rows affected.");
+        try {
+            while (resultSet.next()) {
+                Comment comment = new Comment(resultSet.getLong("comment_id"),
+                        resultSet.getString("text"), resultSet.getLong("task_id"),
+                        resultSet.getLong("author_id"), resultSet.getTimestamp("last_update").toLocalDateTime());
+                comments.add(comment);
             }
-
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next())
-                    return read(generatedKeys.getLong(1));
-                else
-                    LOGGER.error("Creating comment failed! No ID obtained.");
-            }
-
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         }
+        return comments;
+    }
 
-        return null;
+    @Override
+    public Comment create(Comment comment) {
+        try (PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(CREATE_COMMENT)) {
+            preparedStatement.setString(1, comment.getText());
+            preparedStatement.setLong(2, comment.getTaskId());
+            preparedStatement.setLong(3, comment.getAuthorId());
+            preparedStatement.execute();
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next())
+                    return read(generatedKeys.getLong(1));
+                else
+                    throw new SQLException("Creating Comment failed, no ID obtained.");
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public Comment read(Long id) {
-        String sqlQuery = "SELECT * "
-                + " FROM comments WHERE comments.comment_id=" + id + ";";
-
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sqlQuery);
-             ResultSet resultSet = statement.executeQuery()) {
-
-            return new Comment(resultSet.getLong(1), resultSet.getLong(2), resultSet.getLong(3),
-                    resultSet.getString(4), resultSet.getDate(5));
-
+        try (PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(READ_COMMENT)) {
+            preparedStatement.setLong(1, id);
+            List<Comment> result = parsData(preparedStatement.executeQuery());
+            if (result.size() != 1) throw new SQLException("Error with searching comment by id");
+            return result.iterator().next();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
+            return null;
         }
-
-        return null;
     }
 
     @Override
     public Comment update(Comment comment) {
-        String sqlQuery = "UPDATE comments SET comment=?, created_date=? WHERE comment_id =" + comment.getId() + ";";
-
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setString(1, comment.getText());
-            statement.setDate(2, (Date) comment.getDate());
-
-            int result = statement.executeUpdate();
-            if (result > 0)
-                return read(comment.getId());
-
+        try (PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(UPDATE_COMMENT)) {
+            preparedStatement.setString(1, comment.getText());
+            preparedStatement.setLong(2, comment.getId());
+            if (preparedStatement.executeUpdate() != 1)
+                throw new SQLException("Comment have not being updated");
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         }
-        return null;
+        return comment;
     }
 
     @Override
     public void delete(Comment comment) {
-        String sqlQuery = "DELETE FROM comments WHERE comment_id=?";
-
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            statement.setLong(1, comment.getId());
-            statement.executeUpdate();
+        try (PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(DELETE_COMMENT)) {
+            preparedStatement.setLong(1, comment.getId());
+            if (preparedStatement.executeUpdate() != 1)
+                throw new SQLException("Comment have not being deleted");
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         }
@@ -95,22 +94,11 @@ public class CommentRepo implements GenericCRUD<Comment> {
 
     @Override
     public List<Comment> readAll() {
-        List<Comment> comments = new ArrayList<>();
-        String sqlQuery = "SELECT * FROM comments";
-
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sqlQuery);
-             ResultSet resultSet = statement.executeQuery()) {
-
-            while (resultSet.next())
-                comments.add(new Comment(resultSet.getLong(1), resultSet.getLong(2),
-                        resultSet.getLong(3), resultSet.getString(4), resultSet.getDate(5)));
-
-
+        try (PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(READ_ALL_COMMENT)) {
+            return parsData(preparedStatement.executeQuery());
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
+            return null;
         }
-
-        return comments;
     }
 }

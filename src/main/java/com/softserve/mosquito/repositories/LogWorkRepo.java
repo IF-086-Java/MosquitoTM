@@ -1,7 +1,8 @@
 package com.softserve.mosquito.repositories;
 
 import com.softserve.mosquito.enitities.LogWork;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -11,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LogWorkRepo implements GenericCRUD<LogWork> {
-    private static final Logger LOGGER = Logger.getLogger(LogWorkRepo.class);
+
+    private static final Logger LOGGER = LogManager.getLogger(LogWorkRepo.class);
     private DataSource datasource = MySqlDataSource.getDataSource();
 
     private static final String CREATE_LOG_WORK = "INSERT INTO log_works " +
@@ -46,7 +48,7 @@ public class LogWorkRepo implements GenericCRUD<LogWork> {
             preparedStatement.setInt(2, logWork.getLogged());
             preparedStatement.setLong(3, logWork.getUserId());
             preparedStatement.setLong(4, logWork.getEstimationId());
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next())
                     return read(generatedKeys.getLong(1));

@@ -91,11 +91,10 @@ public class LogWork {
         return "LogWork{" +
                 "id=" + id +
                 ", description='" + description + '\'' +
-                ", lastUpdate=" + lastUpdate +
-                ", userId=" + userId +
                 ", logged=" + logged +
+                ", userId=" + userId +
                 ", estimationId=" + estimationId +
+                ", lastUpdate=" + lastUpdate +
                 '}';
     }
-
 }

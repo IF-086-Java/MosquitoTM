@@ -1,29 +1,29 @@
 package com.softserve.mosquito.enitities;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Comment {
     private Long id;
+    private String text;
     private Long taskId;
     private Long authorId;
-    private String text;
-    private Date date;
+    private LocalDateTime lastUpdate;
 
-    public Comment(Long id, Long taskId, Long authorId, String text, Date date) {
+    public Comment() {
+    }
+
+    public Comment(String text, Long taskId, Long authorId) {
+        this.text = text;
+        this.taskId = taskId;
+        this.authorId = authorId;
+    }
+
+    public Comment(Long id, String text, Long taskId, Long authorId,  LocalDateTime lastUpdate) {
         this.id = id;
         this.taskId = taskId;
         this.authorId = authorId;
         this.text = text;
-        this.date = date;
-    }
-
-    public Comment(Long taskId, Long authorId, String text) {
-        this.taskId = taskId;
-        this.authorId = authorId;
-        this.text = text;
-    }
-
-    public Comment() {
+        this.lastUpdate = lastUpdate;
     }
 
     public Long getId() {
@@ -32,6 +32,14 @@ public class Comment {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public Long getTaskId() {
@@ -50,30 +58,22 @@ public class Comment {
         this.authorId = authorId;
     }
 
-    public String getText() {
-        return text;
+    public LocalDateTime getLastUpdate() {
+        return lastUpdate;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     @Override
     public String toString() {
         return "Comment{" +
                 "id=" + id +
+                ", text='" + text + '\'' +
                 ", taskId=" + taskId +
                 ", authorId=" + authorId +
-                ", text='" + text + '\'' +
-                ", date=" + date +
+                ", lastUpdate=" + lastUpdate +
                 '}';
     }
 }

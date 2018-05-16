@@ -12,7 +12,7 @@ public class RequestFilter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		// TODO add request filter
-		System.out.println("Pre-handle method...");
+		//Pre-handle method...
 	}
 
 }

@@ -2,7 +2,8 @@ package com.softserve.mosquito.repositories;
 
 import com.softserve.mosquito.enitities.Estimation;
 import com.softserve.mosquito.enitities.LogWork;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -13,7 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 
 public class EstimationRepo implements GenericCRUD<Estimation> {
-    private static final Logger LOGGER = Logger.getLogger(EstimationRepo.class);
+
+    private static final Logger LOGGER = LogManager.getLogger(EstimationRepo.class);
     private DataSource datasource = MySqlDataSource.getDataSource();
 
     private static final String CREATE_ESTIMATION = "INSERT INTO estimations " +
@@ -60,7 +62,7 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
                 .prepareStatement(CREATE_ESTIMATION)) {
             preparedStatement.setInt(1, estimation.getEstimation());
             preparedStatement.setInt(2, estimation.getRemaining());
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
             try(ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next())
                     return read(generatedKeys.getLong(1));
