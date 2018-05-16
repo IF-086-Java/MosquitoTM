@@ -7,7 +7,7 @@ import com.softserve.mosquito.repositories.UserRepo;
 import java.util.List;
 
 public class UserService  implements GenericCRUD<User> {
-    
+
     UserRepo userRepo = new UserRepo();
 
     @Override

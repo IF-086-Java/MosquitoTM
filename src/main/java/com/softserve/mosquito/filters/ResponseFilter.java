@@ -12,7 +12,7 @@ public class ResponseFilter implements ContainerResponseFilter {
 	@Override
 	public void filter(final ContainerRequestContext requestContext, final ContainerResponseContext responseContext)
 			throws IOException {
-		System.out.println("Post-handle method...");
+		//Post-handle method...
 		//Allow all origins (has been changed to Front-end origin):
 		responseContext.getHeaders().add("Access-Control-Allow-Origin", requestContext.getHeaderString("Origin"));	
 		responseContext.getHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");

@@ -2,146 +2,128 @@ package com.softserve.mosquito.repositories;
 
 import com.softserve.mosquito.enitities.Estimation;
 import com.softserve.mosquito.enitities.LogWork;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class EstimationRepo implements GenericCRUD<Estimation> {
-    private final static Logger log = Logger.getLogger(EstimationRepo.class);
+
+    private static final Logger LOGGER = LogManager.getLogger(EstimationRepo.class);
     private DataSource datasource = MySqlDataSource.getDataSource();
 
-    private List<Estimation> parsData(ResultSet rs) {
-        List<Estimation> estimations = new ArrayList<>();
+    private static final String CREATE_ESTIMATION = "INSERT INTO estimations " +
+            "(estimation,remaining) VALUE (?,?);";
+    private static final String UPDATE_ESTIMATION = "UPDATE estimations " +
+            "SET estimation=?, remaining=? WHERE estimation_id=?;";
+    private static final String DELETE_ESTIMATION = "DELETE FROM estimations WHERE estimation_id=?;";
+    private static final String READ_ESTIMATION = "SELECT * FROM estimations " +
+            "LEFT JOIN log_works USING(estimation_id) WHERE estimation_id=?;";
+    private static final String READ_ALL_ESTIMATION = "SELECT * FROM estimations " +
+            "LEFT JOIN log_works USING(estimation_id);";
 
+    private List<Estimation> parsData(ResultSet resultSet) {
+        HashSet<Estimation> estimations = new HashSet<>();
         try {
-            while (rs.next()) {
-                Estimation estimation = new Estimation();
-                boolean isEstimation = false;
+            while (resultSet.next()) {
+                Estimation estimation = new Estimation(resultSet.getLong("estimation_id"),
+                        resultSet.getInt("estimation"), resultSet.getInt("remaining"));
 
-                estimation.setId(rs.getLong("estimation_id"));
-                estimation.setEstimation(rs.getInt("estimation"));
-                estimation.setRemaining(rs.getInt("remaining"));
+                if (resultSet.getLong("log_work_id") != 0) {
+                    LogWork logWork = new LogWork(resultSet.getLong("log_work_id"),
+                            resultSet.getString("description"), resultSet.getInt("logged"),
+                            resultSet.getLong("user_id"), resultSet.getLong("estimation_id"),
+                            resultSet.getTimestamp("last_update").toLocalDateTime());
+                    estimation.getLogWorks().add(logWork);
 
-                if (rs.getLong("log_work_id") != 0) {
-                    LogWork logWork = new LogWork();
-                    logWork.setId(rs.getLong("log_work_id"));
-                    logWork.setLogDescription(rs.getString("log_description"));
-                    logWork.setLoggedTime(rs.getInt("logged_time"));
-                    logWork.setCreatedDate(rs.getTimestamp("created_date")
-                            .toLocalDateTime());
-                    logWork.setUserId(rs.getLong("user_id"));
-                    logWork.setEstimationId(rs.getLong("estimation_id"));
-
-                    for (Estimation item : estimations) {
+                    for (Estimation item : estimations)
                         if (item.getId().equals(estimation.getId())) {
                             item.getLogWorks().add(logWork);
-                            isEstimation = true;
                             break;
                         }
-                    }
-                    if (!isEstimation) {
-                        estimation.getLogWorks().add(logWork);
-                    }
-                }
-                if (!isEstimation) {
+                } else
                     estimations.add(estimation);
-                }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
-        return estimations;
+        return new ArrayList<>(estimations);
     }
 
     @Override
     public Estimation create(Estimation estimation) {
-        String query = "INSERT INTO estimations (estimation,remaining) VALUE (?,?);";
-
-        try (Connection connection = datasource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, estimation.getEstimation());
-            statement.setInt(2, estimation.getRemaining());
-            int updatedRow = statement.executeUpdate();
-            if (updatedRow != 1) throw new SQLException("Creating estimation failed, no rows affected");
-
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+        try (PreparedStatement preparedStatement = datasource.getConnection()
+                .prepareStatement(CREATE_ESTIMATION)) {
+            preparedStatement.setInt(1, estimation.getEstimation());
+            preparedStatement.setInt(2, estimation.getRemaining());
+            preparedStatement.execute();
+            try(ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next())
                     return read(generatedKeys.getLong(1));
                 else
-                    throw new SQLException("Creating user failed, no ID obtained.");
+                    throw new SQLException("Creating Estimation failed, no ID obtained.");
             }
         } catch (SQLException e) {
-            log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return null;
         }
     }
 
     @Override
     public Estimation read(Long id) {
-        String query = "SELECT * FROM estimations LEFT JOIN log_works USING(estimation_id) " +
-                "WHERE estimation_id=?;";
-
-        try (Connection connection = datasource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, id);
-            List<Estimation> result = parsData(statement.executeQuery());
-            if (result.size() != 1) throw new SQLException("Error with searching object by id");
+        try (PreparedStatement preparedStatement = datasource.getConnection()
+                .prepareStatement(READ_ESTIMATION)) {
+            preparedStatement.setLong(1, id);
+            List<Estimation> result = parsData(preparedStatement.executeQuery());
+            if (result.size() != 1) throw new SQLException("Error with searching Estimation by id");
             return result.iterator().next();
         } catch (SQLException e) {
-            log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return null;
         }
     }
 
     @Override
     public Estimation update(Estimation estimation) {
-        String query = "UPDATE estimations SET estimation=?, remaining=? WHERE estimation_id=?;";
-
-        try (Connection connection = datasource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(2, estimation.getEstimation());
-            statement.setInt(3, estimation.getRemaining());
-            statement.setLong(3, estimation.getId());
-            int updatedRow = statement.executeUpdate();
-            if (updatedRow != 1) throw new SQLException("Object have not being updated");
+        try (PreparedStatement preparedStatement = datasource.getConnection()
+                .prepareStatement(UPDATE_ESTIMATION)) {
+            preparedStatement.setInt(2, estimation.getEstimation());
+            preparedStatement.setInt(3, estimation.getRemaining());
+            preparedStatement.setLong(3, estimation.getId());
+            if (preparedStatement.executeUpdate() != 1)
+                throw new SQLException("Estimation have not being updated");
         } catch (SQLException e) {
-            log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         return estimation;
     }
 
     @Override
     public void delete(Estimation estimation) {
-        String query = "DELETE FROM estimations WHERE estimation_id=? AND estimation=? AND remaining = ?;";
-
-        try (Connection connection = datasource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, estimation.getId());
-            statement.setInt(2, estimation.getEstimation());
-            statement.setInt(3, estimation.getRemaining());
-            int updatedRow = statement.executeUpdate();
-            if (updatedRow != 1) throw new SQLException("Object have not being deleted");
+        try (PreparedStatement preparedStatement = datasource.getConnection()
+                .prepareStatement(DELETE_ESTIMATION)) {
+            preparedStatement.setLong(1, estimation.getId());
+            if (preparedStatement.executeUpdate() != 1)
+                throw new SQLException("Estimation have not being deleted");
         } catch (SQLException e) {
-            log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 
     @Override
     public List<Estimation> readAll() {
-        String query = "SELECT * FROM estimations LEFT JOIN log_works USING(estimation_id);";
-
-        try (Connection connection = datasource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            return parsData(statement.executeQuery());
+        try (PreparedStatement preparedStatement = datasource.getConnection()
+                .prepareStatement(READ_ALL_ESTIMATION)) {
+            return parsData(preparedStatement.executeQuery());
         } catch (SQLException e) {
-            log.error(e.getMessage());
-            return null;
+            LOGGER.error(e.getMessage());
+            return new ArrayList<>();
         }
     }
 }

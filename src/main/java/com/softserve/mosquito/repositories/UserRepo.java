@@ -1,6 +1,10 @@
 package com.softserve.mosquito.repositories;
 
-import java.io.IOException;
+import com.softserve.mosquito.enitities.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,15 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
-
-import org.apache.log4j.Logger;
-
-import com.softserve.mosquito.enitities.*;
-
 public class UserRepo implements GenericCRUD<User> {
 
-    Logger LOGGER = Logger.getLogger(UserRepo.class);
+    private static final Logger LOGGER = LogManager.getLogger(UserRepo.class);
     private DataSource datasource = MySqlDataSource.getDataSource();
 
     @Override

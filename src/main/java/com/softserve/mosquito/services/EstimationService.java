@@ -3,8 +3,6 @@ package com.softserve.mosquito.services;
 import com.softserve.mosquito.enitities.Estimation;
 import com.softserve.mosquito.repositories.EstimationRepo;
 
-import javax.servlet.ServletContext;
-import java.sql.Connection;
 import java.util.List;
 
 public class EstimationService {
