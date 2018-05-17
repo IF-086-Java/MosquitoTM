@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CommentRepo implements GenericCRUD<Comment> {
@@ -99,7 +100,7 @@ public class CommentRepo implements GenericCRUD<Comment> {
             return parsData(preparedStatement.executeQuery());
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
-            return null;
+            return Collections.emptyList();
         }
     }
 }

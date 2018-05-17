@@ -1,63 +1,42 @@
 package com.softserve.mosquito.enitities;
 
-import java.util.Objects;
-
 public final class Specialization {
-	private  Byte specializationId;
-	private  String title;
+    private Byte id;
+    private String title;
 
-	public Specialization() {
-	}
+    public Specialization() {
+    }
 
-	public Specialization(Byte specializationId) {
-		this.specializationId = specializationId;
-	}
+    public Specialization(String title) {
+        this.title = title;
+    }
 
-	public Specialization(String title) {
-		this.title = title;
-	}
+    public Specialization(Byte id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 
-	public Specialization(Byte specializationId, String title) {
-		this.specializationId = specializationId;
-		this.title = title;
-	}
+    public Byte getId() {
+        return id;
+    }
 
-	public Byte getSpecializationId() {
-		return specializationId;
-	}
+    public void setId(Byte id) {
+        this.id = id;
+    }
 
-	public void setSpecializationId(Byte specializationId) {
-		this.specializationId = specializationId;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Specialization that = (Specialization) o;
-		return Objects.equals(specializationId, that.specializationId) &&
-				Objects.equals(title, that.title);
-	}
-
-	@Override
-	public int hashCode() {
-
-		return Objects.hash(specializationId, title);
-	}
-
-	@Override
-	public String toString() {
-		return "Specialization{" +
-				"specializationId=" + specializationId +
-				", title='" + title + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Specialization{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

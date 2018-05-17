@@ -2,7 +2,7 @@ package com.softserve.mosquito.repositories;
 
 import com.softserve.mosquito.enitities.Priority;
 import org.apache.logging.log4j.LogManager;
-import sun.rmi.runtime.Log;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -12,11 +12,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
-public class PriorityRepo implements GenericCRUD<Priority>{
-    private static final org.apache.logging.log4j.Logger Log = LogManager.getLogger(PriorityRepo.class);
+public class PriorityRepo implements GenericCRUD<Priority> {
+    private static final Logger LOGGER = LogManager.getLogger(PriorityRepo.class);
     private DataSource datasource = MySqlDataSource.getDataSource();
+
+    private static final String CREATE_PRIORITY = "INSERT INTO priorities (title) VALUE (?);";
+    private static final String UPDATE_PRIORITY = "UPDATE priorities SET title=? WHERE priority_id=?;";
+    private static final String DELETE_PRIORITY = "DELETE FROM priorities WHERE priority_id=?;";
+    private static final String READ_PRIORITY = "SELECT * FROM priorities WHERE priority_id=?;";
+    private static final String READ_ALL_PRIORITY = "SELECT * FROM priorities";
+
 
     private List<Priority> parsData(ResultSet rs) {
         List<Priority> priorities = new ArrayList<>();
@@ -29,21 +35,16 @@ public class PriorityRepo implements GenericCRUD<Priority>{
                 priorities.add(priority);
             }
         } catch (SQLException e) {
-            Log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         return priorities;
     }
 
     @Override
     public Priority create(Priority priority) {
-        String sqlQuery = "INSERT INTO priorities (title) VALUE (?);";
-
-        try (Connection connection = datasource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(sqlQuery);
+        try (PreparedStatement statement = datasource.getConnection().prepareStatement(CREATE_PRIORITY)) {
             statement.setString(1, priority.getTitle());
-            int updatedRow = statement.executeUpdate();
-            if (updatedRow != 1) throw new SQLException("Creating priority failed, no rows affected");
-
+            statement.execute();
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next())
                     return read(generatedKeys.getLong(1));
@@ -51,7 +52,7 @@ public class PriorityRepo implements GenericCRUD<Priority>{
                     throw new SQLException("Creating priority failed, no ID obtained.");
             }
         } catch (SQLException e) {
-            Log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return null;
         }
     }
@@ -59,62 +60,48 @@ public class PriorityRepo implements GenericCRUD<Priority>{
 
     @Override
     public Priority read(Long id) {
-        String sqlQuery = "SELECT priority_id, title "
-                + " FROM priorities WHERE priority_id=?;";
-        try (Connection connection = datasource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(sqlQuery);
+        try (PreparedStatement statement = datasource.getConnection().prepareStatement(READ_PRIORITY)) {
             statement.setLong(1, id);
             List<Priority> result = parsData(statement.executeQuery());
             if (result.size() != 1) throw new SQLException("Error with searching priority by id");
             return result.iterator().next();
         } catch (SQLException e) {
-            Log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return null;
         }
     }
 
     @Override
     public Priority update(Priority priority) {
-        String sqlQuery = "UPDATE priorities SET title=? WHERE priority_id=?;";
-
-        try (Connection connection = datasource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(sqlQuery);
+        try (PreparedStatement statement = datasource.getConnection().prepareStatement(UPDATE_PRIORITY)) {
             statement.setString(1, priority.getTitle());
             statement.setByte(2, priority.getId());
-            int updatedRow = statement.executeUpdate();
-            if (updatedRow != 1) throw new SQLException("Priorities have not being updated");
+            if (statement.executeUpdate() != 1)
+                throw new SQLException("Priorities have not being updated");
         } catch (SQLException e) {
-            Log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
         return priority;
     }
 
     @Override
     public void delete(Priority priority) {
-        String sqlQuery = "DELETE FROM priorities WHERE priority_id=?;";
-
-        try (Connection connection = datasource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(sqlQuery);
+        try (PreparedStatement statement = datasource.getConnection().prepareStatement(DELETE_PRIORITY)) {
             statement.setByte(1, priority.getId());
-            int updatedRow = statement.executeUpdate();
-            if (updatedRow != 1) throw new SQLException("Priority have not being deleted");
+            if (statement.executeUpdate() != 1)
+                throw new SQLException("Priority have not being deleted");
         } catch (SQLException e) {
-            Log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 
     @Override
     public List<Priority> readAll() {
-        String sqlQuery = "SELECT priority_id, title FROM priorities";
-
-        try (Connection connection = datasource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sqlQuery);
-             ResultSet resultSet = statement.executeQuery()) {
-            return parsData(resultSet);
-
+        try (PreparedStatement statement = datasource.getConnection().prepareStatement(DELETE_PRIORITY)) {
+            return parsData(statement.executeQuery());
         } catch (SQLException e) {
-            Log.error(e.getMessage());
+            LOGGER.error(e.getMessage());
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
     }
 }
