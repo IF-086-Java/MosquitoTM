@@ -97,7 +97,7 @@ public class UserRepo implements GenericCRUD<User> {
 
     @Override
     public List<User> readAll() {
-        String sqlQuery = "SELECT + email, firstName, lastName, password FROM users";
+        String sqlQuery = "SELECT email, first_name, last_name, password FROM users";
         List<User> users = new ArrayList<>();
         try (Connection connection = datasource.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
@@ -110,5 +110,26 @@ public class UserRepo implements GenericCRUD<User> {
             LOGGER.error(e);
         }
         return null;
+    }
+    
+    public User getUserByEmail(String email) {
+    	String sqlQuery = "SELECT user_id, first_name, last_name, email, password FROM users WHERE email = ?";
+    	try(Connection connection = datasource.getConnection()){
+    		PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+    		preparedStatement.setString(1, email);
+    		ResultSet rs = preparedStatement.executeQuery();
+    		if(rs.next()) {
+    			User user = new User();
+    			user.setId(rs.getLong("user_id"));
+    			user.setFirstName(rs.getString("first_name"));
+    			user.setLastName(rs.getString("last_name"));
+    			user.setEmail(rs.getString("email"));
+    			user.setPassword(rs.getString("password"));
+    			return user;
+    		}
+    	} catch(SQLException e) {
+    		LOGGER.error(e);
+    	}
+    	return null;
     }
 }

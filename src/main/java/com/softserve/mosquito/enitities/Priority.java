@@ -1,15 +1,63 @@
 package com.softserve.mosquito.enitities;
 
-public enum Priority {
-    LOW(1L), MIDDLE(2L), HIGH(3L);
+import java.util.Objects;
 
-    private final Long priorityNumber;
+public final class Priority {
+    private Byte id;
+    private String title;
 
-    public Long getPriorityNumber() {
-        return priorityNumber;
+
+
+    public Byte getId() {
+        return id;
     }
 
-    Priority(Long priorNumber) {
-        priorityNumber = priorNumber;
+    public void setId(Byte id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Priority() {
+    }
+
+    public Priority(Byte id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+    public Priority(Byte id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Priority priority = (Priority) o;
+        return Objects.equals(id, priority.id) &&
+                Objects.equals(title, priority.title);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, title);
+    }
+
+    @Override
+    public String toString() {
+        return "Priority{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
     }
 }
+
+

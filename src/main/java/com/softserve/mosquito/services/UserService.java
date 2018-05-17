@@ -8,7 +8,8 @@ import java.util.List;
 
 public class UserService implements GenericCRUD<User> {
 
-    GenericCRUD<User> crud = new UserRepo();
+    private GenericCRUD<User> crud = new UserRepo();
+    private UserRepo userRepo = new UserRepo();
 
     @Override
     public User create(User user) {
@@ -33,5 +34,10 @@ public class UserService implements GenericCRUD<User> {
     @Override
     public List<User> readAll() {
         return crud.readAll();
+
+    }
+
+    public User getUserByEmail(String email) {
+        return this.userRepo.getUserByEmail(email);
     }
 }

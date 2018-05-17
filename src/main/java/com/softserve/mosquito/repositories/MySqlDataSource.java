@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 
 public class MySqlDataSource {
 
-    static Logger LOGGER = LogManager.getLogger(MySqlDataSource.class);
+    private static final Logger LOGGER = LogManager.getLogger(StatusRepo.class);
     private static DataSource ds = null;
 
     static {
@@ -25,6 +25,9 @@ public class MySqlDataSource {
             e.printStackTrace();
         }
     }
+
+
+
 
     public static DataSource getDataSource() {
         return ds;
