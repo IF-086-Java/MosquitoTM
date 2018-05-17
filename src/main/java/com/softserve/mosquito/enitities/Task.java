@@ -9,8 +9,8 @@ public class Task {
     private Long ownerId;
     private Long workerId;
     private Estimation estimation;
-    private Priority priority = Priority.MIDDLE;
-    private Status status = Status.TODO;
+    private Priority priority;
+    private Status status;
     private List<Comment> comments;
 
     public Task() {

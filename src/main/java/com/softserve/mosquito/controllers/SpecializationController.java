@@ -8,36 +8,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import com.softserve.mosquito.enitities.Priority;
 import com.softserve.mosquito.enitities.Specialization;
 import com.softserve.mosquito.repositories.MySqlDataSource;
+import com.softserve.mosquito.services.PriorityService;
+import com.softserve.mosquito.services.SpecializationService;
 
 @Path("/specializations")
 public class SpecializationController {
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Specialization> getAllSpecializations() {
-		
-		// TODO: remove, replace by service. For testing
-		DataSource datasource = MySqlDataSource.getDataSource();
-		String sqlQuery = "SELECT * FROM specializations";
-		Statement stmt = null;
-		List<Specialization> specializations = new ArrayList<>();
-		try (Connection connection = datasource.getConnection()){
-			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery(sqlQuery);
-			while (rs.next()) {
-				specializations.add(Specialization.valueOf(rs.getString(2)));
-			}
-			return specializations;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
+	private SpecializationService specializationService = new SpecializationService();
+
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces({MediaType.APPLICATION_JSON})
+	public Specialization createSpecialization(@FormParam("specialization_id") Byte specializationId,
+											   @FormParam("title") String title){
+		return specializationService.create(new Specialization(specializationId, title));
 	}
+
+	@GET
+	@Path("/{specialization_id}")
+	@Produces({MediaType.APPLICATION_JSON})
+	public Specialization getSpecializationById(@PathParam("specialization_id") Long specialization_id){
+		return specializationService.read(specialization_id);
+	}
+
+	@PUT
+	@Path("/{specialization_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Specialization updateSpecialization(@PathParam("specialization_id") Byte specializationId,
+											   @FormParam("title") String title){
+		return specializationService.update(new Specialization(specializationId, title));
+	}
+
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public List<Specialization> getAllSpecializations(){
+		return specializationService.readAll();
+	}
+
 }

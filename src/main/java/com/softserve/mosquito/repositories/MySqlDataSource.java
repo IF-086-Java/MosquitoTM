@@ -1,16 +1,17 @@
 package com.softserve.mosquito.repositories;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
-
 
 public class MySqlDataSource {
 
-	static Logger LOGGER = Logger.getLogger(MySqlDataSource.class);
+	private static final Logger LOGGER = LogManager.getLogger(StatusRepo.class);
 	private static DataSource ds = null;
 
 	static {

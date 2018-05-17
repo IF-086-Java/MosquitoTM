@@ -47,7 +47,7 @@ public class TaskRepo implements GenericCRUD<Task> {
 			}
 		} catch (SQLException e) { 
 			LOGGER.error(e);	
-		} 
+		}
 		return null;
 	}
 
@@ -102,7 +102,7 @@ public class TaskRepo implements GenericCRUD<Task> {
 			}
 		} catch (SQLException e) {
 			LOGGER.error(e);
-		} 
+		}
 		return null;
 	}
 
@@ -116,7 +116,7 @@ public class TaskRepo implements GenericCRUD<Task> {
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			LOGGER.error(e);
-		} 
+		}
 	}
 
 	@Override
