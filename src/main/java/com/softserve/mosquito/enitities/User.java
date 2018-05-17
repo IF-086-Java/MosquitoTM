@@ -1,32 +1,42 @@
 package com.softserve.mosquito.enitities;
 
-import java.util.Objects;
 import java.util.Set;
 
 public class User {
 
     private Long id;
     private String email;
+    private String password;
     private String firstName;
     private String lastName;
-    private String password;
-    Set<Specialization> specializations;
+    private Set<Specialization> specializations;
 
     public User() {
     }
 
-    public User(String email, String firstName, String lastName, String password) {
+    //Constructor for sign-in
+    public User(String email, String password) {
         this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.password = password;
     }
 
-    public User(String email, String firstName, String lastName, String password, Set<Specialization> specializations) {
+
+    //Constructor for sign-up
+
+    public User(String email, String password, String firstName, String lastName) {
         this.email = email;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public User(Long id, String email, String password,
+                String firstName, String lastName, Set<Specialization> specializations) {
+        this.id = id;
+        this.email = email;
         this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.specializations = specializations;
     }
 
@@ -46,6 +56,14 @@ public class User {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -62,14 +80,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Set<Specialization> getSpecializations() {
         return specializations;
     }
@@ -79,32 +89,13 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(firstName, user.firstName) &&
-                Objects.equals(lastName, user.lastName) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(specializations, user.specializations);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id, email, firstName, lastName, password, specializations);
-    }
-
-    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", password='" + password + '\'' +
                 ", specializations=" + specializations +
                 '}';
     }

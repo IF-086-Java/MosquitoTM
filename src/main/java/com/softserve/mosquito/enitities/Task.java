@@ -3,144 +3,157 @@ package com.softserve.mosquito.enitities;
 import java.util.List;
 
 public class Task {
-	private Long id;
+    private Long id;
+    private String name;
     private Long parentId;
     private Long ownerId;
     private Long workerId;
-    private String name;
-    private Status status = Status.TODO;
-    private Priority priority = Priority.MIDDLE;
     private Estimation estimation;
+    private Priority priority = Priority.MIDDLE;
+    private Status status = Status.TODO;
     private List<Comment> comments;
-    
-    public Task() {}
 
-    /** Just short constructor */
-    public Task(Long id, String name) {
-    	super();
-    	this.id = id;
-    	this.name = name;
+    public Task() {
     }
 
-	/** DB Insert constructor */
-	public Task(Long parentId, Long ownerId, Long workerId, String name, Status status, Priority priority,
-			Estimation estimation) {
-		super();
-		this.parentId = parentId;
-		this.ownerId = ownerId;
-		this.workerId = workerId;
-		this.name = name;
-		this.status = status;
-		this.priority = priority;
-		this.estimation = estimation;
-	}
-	
-	/** DB Select constructor */
-	public Task(Long id, Long parentId, Long ownerId, Long workerId, String name, Status status, Priority priority,
-			Estimation estimation) {
-		super();
-		this.id = id;
-		this.parentId = parentId;
-		this.ownerId = ownerId;
-		this.workerId = workerId;
-		this.name = name;
-		this.status = status;
-		this.priority = priority;
-		this.estimation = estimation;
-	}
+    /**
+     * Just short constructor
+     */
+    public Task(Long id, String name) {
+        super();
+        this.id = id;
+        this.name = name;
+    }
 
-	public Task(Long id, Long parentId, Long ownerId, Long workerId, String name, Status status, Priority priority,
-			Estimation estimation, List<Comment> comments) {
-		super();
-		this.id = id;
-		this.parentId = parentId;
-		this.ownerId = ownerId;
-		this.workerId = workerId;
-		this.name = name;
-		this.status = status;
-		this.priority = priority;
-		this.estimation = estimation;
-		this.comments = comments;
-	}
+    /**
+     * DB Insert constructor
+     */
+    public Task(String name, Long parentId, Long ownerId, Long workerId,
+                Estimation estimation, Priority priority, Status status) {
+        super();
+        this.name = name;
+        this.parentId = parentId;
+        this.ownerId = ownerId;
+        this.workerId = workerId;
+        this.estimation = estimation;
+        this.priority = priority;
+        this.status = status;
+    }
 
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    /**
+     * DB Select constructor
+     */
+    public Task(Long id, Long parentId, Long ownerId, Long workerId, String name, Status status, Priority priority,
+                Estimation estimation) {
+        super();
+        this.id = id;
+        this.parentId = parentId;
+        this.ownerId = ownerId;
+        this.workerId = workerId;
+        this.name = name;
+        this.status = status;
+        this.priority = priority;
+        this.estimation = estimation;
+    }
 
-	public Long getParentId() {
-		return parentId;
-	}
+    public Task(Long id, String name, Long parentId, Long ownerId, Long workerId,
+                Estimation estimation, Priority priority, Status status, List<Comment> comments) {
+        this.id = id;
+        this.name = name;
+        this.parentId = parentId;
+        this.ownerId = ownerId;
+        this.workerId = workerId;
+        this.estimation = estimation;
+        this.priority = priority;
+        this.status = status;
+        this.comments = comments;
+    }
 
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Long getOwnerId() {
-		return ownerId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setOwnerId(Long ownerId) {
-		this.ownerId = ownerId;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Long getWorkerId() {
-		return workerId;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setWorkerId(Long workerId) {
-		this.workerId = workerId;
-	}
+    public Long getParentId() {
+        return parentId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public Long getOwnerId() {
+        return ownerId;
+    }
 
-	public Status getStatus() {
-		return status;
-	}
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
 
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+    public Long getWorkerId() {
+        return workerId;
+    }
 
-	public Priority getPriority() {
-		return priority;
-	}
+    public void setWorkerId(Long workerId) {
+        this.workerId = workerId;
+    }
 
-	public void setPriority(Priority priority) {
-		this.priority = priority;
-	}
+    public Estimation getEstimation() {
+        return estimation;
+    }
 
-	public Estimation getEstimation() {
-		return estimation;
-	}
+    public void setEstimation(Estimation estimation) {
+        this.estimation = estimation;
+    }
 
-	public void setEstimation(Estimation estimation) {
-		this.estimation = estimation;
-	}
+    public Priority getPriority() {
+        return priority;
+    }
 
-	public List<Comment> getComments() {
-		return comments;
-	}
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
 
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
+    public Status getStatus() {
+        return status;
+    }
 
-	@Override
-	public String toString() {
-		return "Task [id=" + id + ", parentId=" + parentId + ", ownerId=" + ownerId + ", workerId=" + workerId
-				+ ", name=" + name + ", status=" + status + ", priority=" + priority + ", estimation=" + estimation
-				+ ", comments=" + comments + "]";
-	}
-    
-    
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", parentId=" + parentId +
+                ", ownerId=" + ownerId +
+                ", workerId=" + workerId +
+                ", estimation=" + estimation +
+                ", priority=" + priority +
+                ", status=" + status +
+                ", comments=" + comments +
+                '}';
+    }
 }
