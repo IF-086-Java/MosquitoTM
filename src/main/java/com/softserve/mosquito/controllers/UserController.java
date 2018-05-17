@@ -22,11 +22,11 @@ public class UserController {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String creareUser(@FormParam("email") String email,
-			@FormParam("first_name") String firstName,
-			@FormParam("last_name") String lastName,
-			@FormParam("specializations") List<String> specializations,
-			@FormParam("password") String password) {
+	public String createUser(@FormParam("email") String email,
+							 @FormParam("first_name") String firstName,
+							 @FormParam("last_name") String lastName,
+							 @FormParam("specializations") List<String> specializations,
+							 @FormParam("password") String password) {
 		String testResult = "Created USER - " + firstName + " " + lastName 
 				+ " EMAIL: "  + email + " SPECIALIZATIN_IDs" + specializations;
 		

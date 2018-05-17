@@ -30,12 +30,12 @@ public class UserRegistrationDto {
     public UserRegistrationDto() {
     }
 
-    public UserRegistrationDto(String email, String password, String confirmPassword, String firstName, String lastName) {
+    public UserRegistrationDto(String email, String firstName, String lastName, String password, String confirmPassword) {
         this.email = email;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
     }
 
     public String getEmail() {

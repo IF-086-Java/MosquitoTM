@@ -6,9 +6,9 @@ public class User {
 
     private Long id;
     private String email;
-    private String password;
     private String firstName;
     private String lastName;
+    private String password;
     private Set<Specialization> specializations;
 
     public User() {
@@ -29,11 +29,11 @@ public class User {
     }
 
     //Constructor for sign-up
-    public User(String email, String password, String firstName, String lastName) {
+    public User(String email, String firstName, String lastName, String password) {
         this.email = email;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.password = password;
     }
 
     public User(Long id, String email, String password,
