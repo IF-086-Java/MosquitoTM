@@ -6,12 +6,20 @@ public class User {
 
     private Long id;
     private String email;
-    private String password;
     private String firstName;
     private String lastName;
+    private String password;
     private Set<Specialization> specializations;
 
     public User() {
+    }
+
+    public User(String email, String password, String firstName, String lastName, Set<Specialization> specializations) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.specializations = specializations;
     }
 
     //Constructor for sign-in
@@ -20,14 +28,12 @@ public class User {
         this.password = password;
     }
 
-
     //Constructor for sign-up
-
-    public User(String email, String password, String firstName, String lastName) {
+    public User(String email, String firstName, String lastName, String password) {
         this.email = email;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.password = password;
     }
 
     public User(Long id, String email, String password,
@@ -78,14 +84,6 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public Set<Specialization> getSpecializations() {
-        return specializations;
-    }
-
-    public void setSpecializations(Set<Specialization> specializations) {
-        this.specializations = specializations;
     }
 
     @Override
