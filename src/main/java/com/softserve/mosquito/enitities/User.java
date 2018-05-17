@@ -10,16 +10,19 @@ public class User {
     private String firstName;
     private String lastName;
     private String password;
-    Set<Specialization> specializations;
+    private String confirmPassword;
+
+    private Set<Specialization> specializations;
 
     public User() {
     }
 
-    public User(String email, String firstName, String lastName, String password) {
+    public User(String email, String firstName, String lastName, String password, String confirmPassword) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
+        this.confirmPassword = confirmPassword;
     }
 
     public User(String email, String firstName, String lastName, String password, Set<Specialization> specializations) {
@@ -68,6 +71,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     public Set<Specialization> getSpecializations() {

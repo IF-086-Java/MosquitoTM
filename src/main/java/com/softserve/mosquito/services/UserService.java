@@ -6,32 +6,32 @@ import com.softserve.mosquito.repositories.UserRepo;
 
 import java.util.List;
 
-public class UserService  implements GenericCRUD<User> {
+public class UserService implements GenericCRUD<User> {
 
-    UserRepo userRepo = new UserRepo();
+    GenericCRUD<User> crud = new UserRepo();
 
     @Override
     public User create(User user) {
-        return userRepo.create(user);
+        return crud.create(user);
     }
 
     @Override
     public User read(Long id) {
-        return null;
+        return crud.read(id);
     }
 
     @Override
     public User update(User user) {
-        return null;
+        return crud.update(user);
     }
 
     @Override
     public void delete(User user) {
-
+        crud.delete(user);
     }
 
     @Override
     public List<User> readAll() {
-        return null;
+        return crud.readAll();
     }
 }

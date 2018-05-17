@@ -1,19 +1,11 @@
 package com.softserve.mosquito.controllers;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.ServletContext;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-
 import com.softserve.mosquito.enitities.Task;
 import com.softserve.mosquito.repositories.TaskRepo;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Task controller : JAX-RS + MySql + JSON test.

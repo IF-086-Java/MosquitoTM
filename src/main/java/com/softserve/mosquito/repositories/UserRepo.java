@@ -19,7 +19,7 @@ public class UserRepo implements GenericCRUD<User> {
 
     @Override
     public User create(User user) {
-        String sqlQuery = "INSERT INTO users (email, firstName, lastName, password) + VALUES (?, ?, ?, ?)";
+        String sqlQuery = "INSERT INTO users (email, first_name, last_name, password)  VALUES (?, ?, ?, ?)";
         try (Connection connection = datasource.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
             preparedStatement.setString(1, user.getEmail());
@@ -46,7 +46,7 @@ public class UserRepo implements GenericCRUD<User> {
 
     @Override
     public User read(Long id) {
-        String sqlQuery = "SELECT email, firstName, lastName, password + FROM users WHERE user.user_id = ?";
+        String sqlQuery = "SELECT email, first_name, last_name, password  FROM users WHERE user.user_id = ?";
         try (Connection connection = datasource.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
             preparedStatement.setLong(1, id);
@@ -62,7 +62,7 @@ public class UserRepo implements GenericCRUD<User> {
 
     @Override
     public User update(User user) {
-        String sqlQuery = "UPDATE users SET email = ?, firstName = ?, lastName = ?, password = ? WHERE user_id = ?";
+        String sqlQuery = "UPDATE users SET email = ?, first_name = ?, last_name = ?, password = ? WHERE user_id = ?";
         PreparedStatement preparedStatement = null;
         try (Connection connection = datasource.getConnection()){
             preparedStatement = connection.prepareStatement(sqlQuery);

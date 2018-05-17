@@ -2,25 +2,24 @@ package com.softserve.mosquito.validation;
 
 import com.softserve.mosquito.dtos.UserLoginDto;
 import com.softserve.mosquito.dtos.UserRegistrationDto;
+import com.softserve.mosquito.enitities.User;
+import com.softserve.mosquito.services.UserService;
 
 public class Validation {
 
-    public boolean loginValidation(UserLoginDto loginDto){
+    private UserService userService = new UserService();
 
-        if (loginDto.getUsername().length() < 10&& loginDto.getUsername().length() < 25)
+    public boolean loginValidation(UserLoginDto loginDto) {
+
+        if (loginDto.getUsername().length() < 10 && loginDto.getUsername().length() < 25)
             return true;
 
 
         return false;
     }
 
-    public boolean registerValidation(UserRegistrationDto registrationDto) {
-
-        if (registrationDto.getEmail().matches(""))
-            if (registrationDto.getConfirmPassword().equals(registrationDto.getPassword()))
-                return true;
-
-        return false;
+    public boolean registerValidation(UserRegistrationDto user) {
+        return user.getConfirmPassword().equals(user.getPassword()) && userService.create(null) != null;
     }
 
 }
