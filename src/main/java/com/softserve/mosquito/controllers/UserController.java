@@ -13,6 +13,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.softserve.mosquito.enitities.User;
+import com.softserve.mosquito.repositories.UserRepo;
+
 @Path("/users")
 public class UserController {
 	
@@ -31,9 +34,11 @@ public class UserController {
 	}
 	
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getAllUsers() {
-		return "Returned all users";
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<User> getAllUsers() {
+		
+		//TODO: Delete. Only for testing
+		return new UserRepo().readAll();
 	}
 	
 	@GET

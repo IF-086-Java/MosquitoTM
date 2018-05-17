@@ -11,12 +11,12 @@ import javax.ws.rs.core.Response;
 import com.softserve.mosquito.dtos.UserLoginDto;
 import com.softserve.mosquito.dtos.UserRegistrationDto;
 import com.softserve.mosquito.enitities.User;
-import com.softserve.mosquito.validation.Validation;
+import com.softserve.mosquito.validation.UserValidation;
 
 @Path("/")
 public class IndexController {
 
-    private Validation validation = new Validation();
+    private UserValidation validation = new UserValidation();
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -27,7 +27,6 @@ public class IndexController {
     }
     
     /**
-     * Just login test. Override this method
      * @param user : JSON body from Front-end in POST
      * @return JSON to Front 
      * */
@@ -36,9 +35,11 @@ public class IndexController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public User login(UserLoginDto user) {
-
-        validation.loginValidation(user);
-        return new User(user.getUsername(), "", "", user.getPassword());
+       if(validation.isLoginValid(user)) {
+    	   return new User(user.getEmail(), "", "", user.getPassword());
+       }else {
+    	   return null;
+       }
     }
 
     @POST
