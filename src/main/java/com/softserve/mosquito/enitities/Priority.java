@@ -1,12 +1,20 @@
 package com.softserve.mosquito.enitities;
 
-import java.util.Objects;
-
 public final class Priority {
     private Byte id;
     private String title;
 
+    public Priority() {
+    }
 
+    public Priority(String title) {
+        this.title = title;
+    }
+
+    public Priority(Byte id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 
     public Byte getId() {
         return id;
@@ -22,33 +30,6 @@ public final class Priority {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Priority() {
-    }
-
-    public Priority(Byte id, String title) {
-        this.id = id;
-        this.title = title;
-    }
-
-    public Priority(Byte id) {
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Priority priority = (Priority) o;
-        return Objects.equals(id, priority.id) &&
-                Objects.equals(title, priority.title);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id, title);
     }
 
     @Override

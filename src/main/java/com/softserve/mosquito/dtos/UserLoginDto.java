@@ -2,8 +2,10 @@ package com.softserve.mosquito.dtos;
 
 
 /**
- * DTO for login
- * */
+<<<<<<< HEAD
+ * Just test DTO. It may be override.
+ */
+
 public class UserLoginDto {
 	private String email;
 	private String password;
@@ -32,4 +34,5 @@ public class UserLoginDto {
 		this.password = password;
 	}
 	
+
 }

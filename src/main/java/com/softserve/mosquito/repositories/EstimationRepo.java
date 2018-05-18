@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -123,7 +124,7 @@ public class EstimationRepo implements GenericCRUD<Estimation> {
             return parsData(preparedStatement.executeQuery());
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
     }
 }

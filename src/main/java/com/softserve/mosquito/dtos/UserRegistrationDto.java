@@ -1,24 +1,41 @@
 package com.softserve.mosquito.dtos;
 
-import java.util.Objects;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class UserRegistrationDto {
 
+    @NotNull
+    @Pattern(regexp = "^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,}$)",
+            message = "user.email.pattern")
     private String email;
-    private String password;
-    private String confirmPassword;
+
+    @NotNull
+    @Size(min = 2, max = 25, message = "user.first_name.pattern")
     private String firstName;
+
+    @NotNull
+    @Size(min = 3, max = 25, message = "user.last_name.pattern")
     private String lastName;
+
+    @NotNull
+    @Size(min = 8, message = "user.password.pattern")
+    private String password;
+
+    @NotNull
+    private String confirmPassword;
+
 
     public UserRegistrationDto() {
     }
 
-    public UserRegistrationDto(String email, String password, String confirmPassword, String firstName, String lastName) {
+    public UserRegistrationDto(String email, String firstName, String lastName, String password, String confirmPassword) {
         this.email = email;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
     }
 
     public String getEmail() {
@@ -61,32 +78,4 @@ public class UserRegistrationDto {
         this.lastName = lastName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserRegistrationDto that = (UserRegistrationDto) o;
-        return Objects.equals(email, that.email) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(confirmPassword, that.confirmPassword) &&
-                Objects.equals(firstName, that.firstName) &&
-                Objects.equals(lastName, that.lastName);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(email, password, confirmPassword, firstName, lastName);
-    }
-
-    @Override
-    public String toString() {
-        return "UserRegistrationDto{" +
-                "email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", confirmPassword='" + confirmPassword + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
-    }
 }

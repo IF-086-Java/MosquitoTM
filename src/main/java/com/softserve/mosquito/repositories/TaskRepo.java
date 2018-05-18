@@ -30,8 +30,8 @@ public class TaskRepo implements GenericCRUD<Task> {
 			ps.setLong(2, task.getOwnerId());
 			ps.setLong(3, task.getWorkerId());
 			ps.setString(4, task.getName());
-			ps.setLong(5, task.getStatus().getStatusNumber());
-			ps.setLong(6, task.getPriority().getPriorityNumber());
+			//ps.setLong(5, task.getStatus();
+			//ps.setLong(6, task.getPriority());
 			ps.setLong(7, task.getEstimation().getId());
 
 			int affectedRows = ps.executeUpdate();
@@ -68,13 +68,13 @@ public class TaskRepo implements GenericCRUD<Task> {
 			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				Status status = Status.valueOf(rs.getString(6));
-				Priority priority = Priority.valueOf(rs.getString(7));
+				//Status status = Status.valueOf(rs.getString(6));
+				//Priority priority = Priority.valueOf(rs.getString(7));
 				Estimation estimation = new Estimation(rs.getLong(8), rs.getInt(9), rs.getInt(10));
-				return new Task(rs.getLong(1), rs.getLong(2), rs.getLong(3),	rs.getLong(4), rs.getString(5),
-						status,
-						priority,
-						estimation);
+//				return new Task(rs.getLong(1), rs.getLong(2), rs.getLong(3),	rs.getLong(4), rs.getString(5),
+//						status,
+//						priority,
+//						estimation);
 			} else {
 				return null;
 			}
@@ -92,8 +92,8 @@ public class TaskRepo implements GenericCRUD<Task> {
 			ps = connection.prepareStatement(sqlQuery);
 			ps.setString(1, task.getName());
 			ps.setLong(2, task.getId());
-			ps.setLong(3, task.getStatus().getStatusNumber());
-			ps.setLong(4, task.getPriority().getPriorityNumber());
+//			ps.setLong(3, task.getStatus().getStatusNumber());
+//			ps.setLong(4, task.getPriority().getPriorityNumber());
 			ps.setLong(5, task.getId());
 			
 			int updatedRows = ps.executeUpdate();
@@ -135,11 +135,11 @@ public class TaskRepo implements GenericCRUD<Task> {
 			ps = connection.prepareStatement(sqlQuery);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Status status = Status.valueOf(rs.getString(6));
-				Priority priority = Priority.valueOf(rs.getString(7));
+//				Status status = Status.valueOf(rs.getString(6));
+//				Priority priority = Priority.valueOf(rs.getString(7));
 				Estimation estimation = new Estimation(rs.getLong(8), rs.getInt(9), rs.getInt(10));
-				tasks.add(new Task(rs.getLong(1), rs.getLong(2), rs.getLong(3),	rs.getLong(4), rs.getString(5),
-						status,	priority, estimation));
+//				tasks.add(new Task(rs.getLong(1), rs.getLong(2), rs.getLong(3),	rs.getLong(4), rs.getString(5),
+//						status,	priority, estimation));
 			}
 			return tasks;
 		} catch (SQLException e) {
