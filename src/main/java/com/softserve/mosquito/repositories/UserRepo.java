@@ -62,20 +62,6 @@ public class UserRepo implements GenericCRUD<User> {
     }
 
     @Override
-    public User read(Long id) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(READ_USER)) {
-
-            preparedStatement.setLong(1, id);
-            return getData(preparedStatement.executeQuery());
-
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        return null;
-    }
-
-    @Override
     public User update(User user) {
         try (PreparedStatement preparedStatement =
                      dataSource.getConnection().prepareStatement(UPDATE_USER)) {
@@ -121,6 +107,20 @@ public class UserRepo implements GenericCRUD<User> {
             LOGGER.error(e.getMessage(), e);
         }
         return user;
+    }
+
+    @Override
+    public User read(Long id) {
+        try (PreparedStatement preparedStatement =
+                     dataSource.getConnection().prepareStatement(READ_USER)) {
+
+            preparedStatement.setLong(1, id);
+            return getData(preparedStatement.executeQuery());
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return null;
     }
 
 
