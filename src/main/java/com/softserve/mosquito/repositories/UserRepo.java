@@ -18,18 +18,18 @@ public class UserRepo implements GenericCRUD<User> {
 
     private static final String CREATE_USER =
             "INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)";
-
     private static final String UPDATE_USER =
             "UPDATE users SET email = ?, password = ?, first_name = ?, last_name = ? WHERE user_id = ?";
+    private static final String DELETE_USER =
+            "DELETE FROM users WHERE user_id = ?";
 
-    private static final String DELETE_USER = "DELETE FROM users WHERE user_id = ?";
 
-
-    private static final String READ_USER = "SELECT * FROM users WHERE user.user_id = ?";
-
-    private static final String READ_ALL_USERS = "SELECT * FROM users";
-
-    private static final String READ_USER_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
+    private static final String READ_USER =
+            "SELECT * FROM users WHERE user.user_id = ?";
+    private static final String READ_ALL_USERS =
+            "SELECT * FROM users";
+    private static final String READ_USER_BY_EMAIL =
+            "SELECT * FROM users WHERE email = ?";
 
 
     @Override

@@ -7,6 +7,10 @@ public final class Priority {
     public Priority() {
     }
 
+    public Priority(Byte id) {
+        this.id = id;
+    }
+
     public Priority(String title) {
         this.title = title;
     }
