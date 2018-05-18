@@ -22,7 +22,7 @@ public class UserRepo implements GenericCRUD<User> {
     private static final String UPDATE_USER =
             "UPDATE users SET email = ?, password = ?, first_name = ?, last_name = ? WHERE user_id = ?";
 
-    private static final String DELETE_USER = "DELETE users WHERE user_id = ?";
+    private static final String DELETE_USER = "DELETE FROM users WHERE user_id = ?";
 
 
     private static final String READ_USER = "SELECT * FROM users WHERE user.user_id = ?";
@@ -40,7 +40,7 @@ public class UserRepo implements GenericCRUD<User> {
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getFirstName());
-            preparedStatement.setString(5, user.getLastName());
+            preparedStatement.setString(4, user.getLastName());
 
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {

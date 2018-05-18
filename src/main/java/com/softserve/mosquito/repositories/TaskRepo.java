@@ -25,9 +25,17 @@ public class TaskRepo implements GenericCRUD<Task> {
 
     private static final String UPDATE_TASK =
             "UPDATE tasks SET name = ?, worker_id = ?, " +
-                    "priority_id =, status_id = ? ? WHERE task_id = ?";
+                    "priority_id =?, status_id = ? WHERE task_id = ?";
 
-    private static final String DELETE_TASK = "DELETE tasks WHERE task_id = ?";
+    private static final String DELETE_TASK = "DELETE FROM tasks WHERE task_id = ?";
+    
+    private static final String READ_TASK = "SELECT * FROM tasks t JOIN statuses USING(status_id) " +
+            "JOIN estimations e ON e.estimation_id=t.estimation_id " +
+            "JOIN priorities p ON t.priority_id=p.priority_id WHERE task_id=?;";
+    
+    private static final String READ_ALL_TASK = "SELECT * FROM tasks t JOIN statuses USING(status_id) " +
+            "JOIN estimations e ON t.estimation_id=e.estimation_id " +
+            "JOIN priorities p ON t.priority_id=p.priority_id;";
 
 
 //    private static final String READ_TASK = "SELECT "
@@ -159,7 +167,7 @@ public class TaskRepo implements GenericCRUD<Task> {
 
     @Override
     public List<Task> readAll() {
-//        List<Task> tasks = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
 //        try (PreparedStatement preparedStatement = datasource.getConnection().prepareStatement(READ_ALL_TASKS);
 //             ResultSet resultSet = preparedStatement.executeQuery()) {
 //
@@ -171,6 +179,6 @@ public class TaskRepo implements GenericCRUD<Task> {
 //        } catch (SQLException e) {
 //            LOGGER.error(e.getMessage(), e);
 //        }
-        return null;
+        return tasks;
     }
 }
