@@ -10,16 +10,21 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 public class UserValidation {
-    private UserService userService = new UserService();
+
     private String salt = "r4OSxKpY";
+    private UserService userService = new UserService();
+    private static final int MIN_EMAIL_LENGTH = 5;
+    private static final int MAX_EMAIL_LENGTH = 50;
+    private static final int MIN_PASSWORD_LENGTH = 5;
+    private static final int MAX_PASSWORD_LENGTH = 80;
 
     public boolean isLoginValid(UserLoginDto userLoginDto) {
         if (userLoginDto != null) {
             String userLoginEmail = userLoginDto.getEmail();
-            String userLoginPassword = userLoginDto.getPassword();
+            String userLoginPassword = DigestUtils.md5Hex(userLoginDto.getPassword()).concat(salt);
 
-            if (userLoginEmail != null && userLoginEmail.length() > 10 && userLoginEmail.length() < 35
-                    && userLoginPassword != null && userLoginPassword.length() > 5 && userLoginPassword.length() < 35) {
+            if (userLoginEmail != null && userLoginEmail.length() >= MIN_EMAIL_LENGTH && userLoginEmail.length() <= MAX_EMAIL_LENGTH
+                    && userLoginPassword != null && userLoginPassword.length() >= MIN_PASSWORD_LENGTH && userLoginPassword.length() <= MAX_PASSWORD_LENGTH) {
                 User user = userService.getUserByEmail(userLoginDto.getEmail());
 
                 if (user != null) {
@@ -33,7 +38,7 @@ public class UserValidation {
         }
         return false;
     }
-
+	
     public boolean registerValidation(UserRegistrationDto userForRegister) {
 
         User user = userService.getUserByEmail(userForRegister.getEmail());
