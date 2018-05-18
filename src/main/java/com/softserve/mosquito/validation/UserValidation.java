@@ -11,6 +11,7 @@ import java.util.Random;
 
 public class UserValidation {
     private UserService userService = new UserService();
+    private String salt = "r4OSxKpY";
 
     public boolean isLoginValid(UserLoginDto userLoginDto) {
         if (userLoginDto != null) {
@@ -36,26 +37,17 @@ public class UserValidation {
     public boolean registerValidation(UserRegistrationDto userForRegister) {
 
         User user = userService.getUserByEmail(userForRegister.getEmail());
-        if (user == null) {
-            String password = DigestUtils.md5Hex(userForRegister.getPassword()).concat(getSalt());
+        if (user == null && userForRegister.getConfirmPassword().equals(userForRegister.getPassword())) {
+            String password = DigestUtils.md5Hex(userForRegister.getPassword().concat(salt));
 
             user = new User(userForRegister.getEmail(),
                     userForRegister.getFirstName(),
                     userForRegister.getLastName(),
                     password);
-            return userForRegister.getConfirmPassword().equals(userForRegister.getPassword())
-                    && userService.create(user) != null;
+            return userService.create(user) != null;
         }
 
         return false;
-    }
-
-    private String getSalt() {
-        Random random = new SecureRandom();
-        StringBuilder salt = new StringBuilder();
-        for (int i = 0; i < 8; i++)
-            salt.append(random.nextInt(9));
-        return salt.toString();
     }
 
 }
