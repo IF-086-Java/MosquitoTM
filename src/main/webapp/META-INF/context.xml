@@ -1,4 +1,4 @@
-<Context path="/*"
+<Context path="/MosquitoTM"
    crossContext="true" reloadable="true" debug="1">
 
   <Resource name="jdbc/mosquitoDB" 
