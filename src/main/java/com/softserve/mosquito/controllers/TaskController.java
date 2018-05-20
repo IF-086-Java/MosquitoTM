@@ -16,6 +16,7 @@ public class TaskController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public String createSubTaskOrProject(@QueryParam("parentId") Long parentId,
                                          @FormParam("task_name") String taskName,
                                          @FormParam("priority") String priority,
@@ -28,30 +29,31 @@ public class TaskController {
     }
 
     @GET
-    @Path("/worker-id")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getWorkerTasks(@QueryParam("workerId") Long workerId) {
+    @Path("/workers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getWorkerTasks(@QueryParam("worker_id") Long workerId) {
         return "User tasks " + workerId;
     }
 
     @GET
-    @Path("/owner-id")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getOwnerTasks(@QueryParam("ownerId") Long ownerId) {
+    @Path("/owners")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getOwnerTasks(@QueryParam("owner_id") Long ownerId) {
         return "Owner id " + ownerId;
     }
 
     @GET
-    @Path("/{taskId}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getTaskById(@PathParam("taskId") Long taskId) {
+    @Path("/{task_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getTaskById(@PathParam("task_id") Long taskId) {
         return "Got task with id " + taskId;
     }
 
     @PUT
-    @Path("/{taskId}")
+    @Path("/{task_id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String updateTask(@PathParam("taskId") Long taskId,
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateTask(@PathParam("task_id") Long taskId,
                              @FormParam("task_name") String taskName,
                              @FormParam("priority") String priority,
                              @FormParam("specialization") String specialization,
@@ -64,23 +66,24 @@ public class TaskController {
     }
 
     @GET
-    @Path("/parent")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getSubTaskOrProject(@QueryParam("parentId") Long parentId) {
+    @Path("/parents")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getSubTaskOrProject(@QueryParam("parent_id") Long parentId) {
         return "Got subTask/project for ID " + parentId;
     }
 
     @DELETE
-    @Path("/{taskId}")
+    @Path("/{task_id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String deleteTask(@PathParam("taskId") Long taskId) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteTask(@PathParam("task_id") Long taskId) {
         return "Deleted task with id " + taskId;
     }
 
     @GET
-    @Path("/status")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getTaskByStatus(@QueryParam("taskStatus") Long statusId) {
+    @Path("/statuses")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getTaskByStatus(@QueryParam("task_status") Long statusId) {
         return "Got task with status id " + statusId;
     }
 

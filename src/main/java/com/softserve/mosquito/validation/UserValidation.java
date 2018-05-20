@@ -38,7 +38,7 @@ public class UserValidation {
         }
         return false;
     }
-	
+
     public boolean registerValidation(UserRegistrationDto userForRegister) {
 
         User user = userService.getUserByEmail(userForRegister.getEmail());

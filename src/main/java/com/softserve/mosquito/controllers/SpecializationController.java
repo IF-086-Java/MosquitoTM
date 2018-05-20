@@ -1,21 +1,11 @@
 package com.softserve.mosquito.controllers;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import com.softserve.mosquito.enitities.Specialization;
+import com.softserve.mosquito.services.SpecializationService;
 
-import javax.sql.DataSource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-
-import com.softserve.mosquito.enitities.Priority;
-import com.softserve.mosquito.enitities.Specialization;
-import com.softserve.mosquito.repositories.MySqlDataSource;
-import com.softserve.mosquito.services.PriorityService;
-import com.softserve.mosquito.services.SpecializationService;
+import java.util.List;
 
 @Path("/specializations")
 public class SpecializationController {
