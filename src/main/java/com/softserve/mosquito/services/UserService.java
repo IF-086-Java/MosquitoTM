@@ -1,10 +1,10 @@
 package com.softserve.mosquito.services;
 
-import com.softserve.mosquito.enitities.User;
+import java.util.List;
+
+import com.softserve.entities.User;
 import com.softserve.mosquito.repositories.GenericCRUD;
 import com.softserve.mosquito.repositories.UserRepo;
-
-import java.util.List;
 
 public class UserService implements GenericCRUD<User> {
 

@@ -1,13 +1,11 @@
 package com.softserve.mosquito.validation;
 
-import com.softserve.mosquito.dtos.UserLoginDto;
-import com.softserve.mosquito.dtos.UserRegistrationDto;
-import com.softserve.mosquito.enitities.User;
-import com.softserve.mosquito.services.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.security.SecureRandom;
-import java.util.Random;
+import com.softserve.entities.User;
+import com.softserve.mosquito.dtos.UserLoginDto;
+import com.softserve.mosquito.dtos.UserRegistrationDto;
+import com.softserve.mosquito.services.UserService;
 
 public class UserValidation {
 

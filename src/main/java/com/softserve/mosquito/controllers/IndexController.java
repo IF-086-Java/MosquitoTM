@@ -2,7 +2,6 @@ package com.softserve.mosquito.controllers;
 
 import com.softserve.mosquito.dtos.UserLoginDto;
 import com.softserve.mosquito.dtos.UserRegistrationDto;
-import com.softserve.mosquito.enitities.User;
 import com.softserve.mosquito.services.UserService;
 import com.softserve.mosquito.validation.UserValidation;
 
@@ -13,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import com.softserve.entities.*;
 
 @Path("/")
 public class IndexController {

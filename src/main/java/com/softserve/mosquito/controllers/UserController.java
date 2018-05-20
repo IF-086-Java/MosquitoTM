@@ -13,7 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.softserve.mosquito.enitities.User;
+import com.softserve.entities.User;
 import com.softserve.mosquito.repositories.UserRepo;
 
 @Path("/users")

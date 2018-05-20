@@ -1,18 +1,17 @@
 package com.softserve.mosquito.repositories;
 
-import com.softserve.mosquito.enitities.Estimation;
-import com.softserve.mosquito.enitities.Priority;
-import com.softserve.mosquito.enitities.Status;
-import com.softserve.mosquito.enitities.Task;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.softserve.entities.Task;
 
 public class TaskRepo implements GenericCRUD<Task> {
     private static final Logger LOGGER = LogManager.getLogger(TaskRepo.class);

@@ -1,11 +1,10 @@
 package com.softserve.mosquito.services;
 
-import com.softserve.mosquito.enitities.Priority;
+import java.util.List;
+
+import com.softserve.entities.Priority;
 import com.softserve.mosquito.exceptions.EntityNotFoundException;
 import com.softserve.mosquito.repositories.PriorityRepo;
-
-import java.sql.SQLException;
-import java.util.List;
 
 public class PriorityService {
     private PriorityRepo priorityRepo = new PriorityRepo();

@@ -1,15 +1,17 @@
 package com.softserve.mosquito.repositories;
 
-import com.softserve.mosquito.enitities.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.softserve.entities.User;
 
 public class UserRepo implements GenericCRUD<User> {
 

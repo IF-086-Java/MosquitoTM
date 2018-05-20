@@ -1,16 +1,18 @@
 package com.softserve.mosquito.repositories;
 
-import com.softserve.mosquito.enitities.Specialization;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.softserve.entities.Specialization;
 
 public class SpecializationRepo implements GenericCRUD<Specialization> {
     private static final Logger LOGGER = LogManager.getLogger(SpecializationRepo.class);

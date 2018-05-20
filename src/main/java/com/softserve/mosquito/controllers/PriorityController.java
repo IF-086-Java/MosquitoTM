@@ -1,12 +1,12 @@
 package com.softserve.mosquito.controllers;
 
-import com.softserve.mosquito.enitities.Priority;
 import com.softserve.mosquito.services.PriorityService;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import com.softserve.entities.*;
 
 @Path("/priorities")
 public class PriorityController {

@@ -1,11 +1,10 @@
 package com.softserve.mosquito.services;
 
-import com.softserve.mosquito.enitities.Priority;
-import com.softserve.mosquito.enitities.Specialization;
+import java.util.List;
+
+import com.softserve.entities.Specialization;
 import com.softserve.mosquito.exceptions.EntityNotFoundException;
 import com.softserve.mosquito.repositories.SpecializationRepo;
-
-import java.util.List;
 
 public class SpecializationService {
     private SpecializationRepo specializationRepo = new SpecializationRepo();
