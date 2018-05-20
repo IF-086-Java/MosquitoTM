@@ -12,17 +12,15 @@ import javax.sql.DataSource;
 public class MySqlDataSource {
 
     private static final Logger LOGGER = LogManager.getLogger(StatusRepo.class);
-    private static DataSource ds = null;
+    private static DataSource dataSource = null;
 
     static {
         LOGGER.info("Inside Database() static method... ");
-        Context context = null;
         try {
-            context = new InitialContext();
-            ds = (DataSource) context.lookup("java:comp/env/jdbc/mosquitoDB");
+            Context context = new InitialContext();
+            dataSource = (DataSource) context.lookup("java:comp/env/jdbc/mosquitoDB");
         } catch (NamingException e) {
-            LOGGER.error("Unable to get Datasource...");
-            e.printStackTrace();
+            LOGGER.error("Unable to get Datasource...", e);
         }
     }
 
@@ -30,6 +28,6 @@ public class MySqlDataSource {
 
 
     public static DataSource getDataSource() {
-        return ds;
+        return dataSource;
     }
 }

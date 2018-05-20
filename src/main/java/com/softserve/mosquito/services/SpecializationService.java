@@ -1,8 +1,6 @@
 package com.softserve.mosquito.services;
 
-import com.softserve.mosquito.enitities.Priority;
 import com.softserve.mosquito.enitities.Specialization;
-import com.softserve.mosquito.exceptions.EntityNotFoundException;
 import com.softserve.mosquito.repositories.SpecializationRepo;
 
 import java.util.List;
@@ -20,10 +18,11 @@ public class SpecializationService {
     public Specialization read(Long id) {
         Specialization read = specializationRepo.read(id);
         if (read == null) {
-            throw new EntityNotFoundException("Specialization with this Id " + id + " didn't found ");
+            //throw new EntityNotFoundException("Specialization with this Id " + id + " didn't found ");
         }else {
             return read;
         }
+        return null;
     }
 
     public Specialization update(Specialization specialization) {

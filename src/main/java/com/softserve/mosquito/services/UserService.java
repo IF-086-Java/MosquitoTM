@@ -38,6 +38,6 @@ public class UserService implements GenericCRUD<User> {
     }
 
     public User getUserByEmail(String email) {
-        return this.userRepo.getUserByEmail(email);
+        return this.userRepo.readUserByEmail(email);
     }
 }

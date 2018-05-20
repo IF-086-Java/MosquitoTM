@@ -1,10 +1,8 @@
 package com.softserve.mosquito.services;
 
 import com.softserve.mosquito.enitities.Priority;
-import com.softserve.mosquito.exceptions.EntityNotFoundException;
 import com.softserve.mosquito.repositories.PriorityRepo;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class PriorityService {
@@ -20,10 +18,11 @@ public class PriorityService {
     public Priority read(Long id){
         Priority read = priorityRepo.read(id);
         if (read == null) {
-            throw new EntityNotFoundException("Priority with this Id " + id + " didn't found ");
+            //throw new EntityNotFoundException("Priority with this Id " + id + " didn't found ");
         }else {
             return read;
         }
+        return null;
     }
 
     public Priority update(Priority priority) {
