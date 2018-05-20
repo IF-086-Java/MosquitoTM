@@ -4,20 +4,13 @@ import java.util.List;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.softserve.mosquito.enitities.User;
 import com.softserve.mosquito.repositories.UserRepo;
 
 @Path("/users")
 public class UserController {
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getAllUsers() {
-
-        //TODO: Delete. Only for testing
-        return new UserRepo().readAll();
-    }
 
     @GET
     @Path("/{user_id}")
@@ -45,14 +38,19 @@ public class UserController {
     @DELETE
     @Path("/{user_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String deleteUserById(@PathParam("user_id") long userId) {
-        return "Deleted user with ID: " + userId;
+    public Response deleteUserById(@PathParam("user_id") long userId) {
+        return Response.ok().entity("Deleted user with ID: " + userId).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUsersBySpecializationId(@QueryParam("specialization") String specialization) {
-        return "Got all users with Specialization " + specialization;
+    public Response getUsersBySpecializationId(@QueryParam("specialization") String specialization) {
+
+        if (specialization == null) {
+            return Response.ok().entity(new UserRepo().readAll()).build();
+        }
+
+        return Response.ok().entity("Got all users with Specialization " + specialization).build();
     }
 
 }
