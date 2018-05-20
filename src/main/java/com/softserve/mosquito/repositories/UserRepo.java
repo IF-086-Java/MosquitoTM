@@ -93,20 +93,23 @@ public class UserRepo implements GenericCRUD<User> {
 
     }
 
-    private User getData(ResultSet resultSet) {
-        User user = new User();
+    private List<User> getData(ResultSet resultSet) {
+        List<User> users = new ArrayList<>();
         try {
             while (resultSet.next()) {
+                User user = new User();
                 user.setId(resultSet.getLong("user_id"));
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
                 user.setFirstName(resultSet.getString("first_name"));
                 user.setLastName(resultSet.getString("last_name"));
+
+                users.add(user);
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        return user;
+        return users;
     }
 
     @Override
@@ -115,7 +118,7 @@ public class UserRepo implements GenericCRUD<User> {
                      dataSource.getConnection().prepareStatement(READ_USER)) {
 
             preparedStatement.setLong(1, id);
-            return getData(preparedStatement.executeQuery());
+            return getData(preparedStatement.executeQuery()).iterator().next();
 
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
@@ -126,20 +129,14 @@ public class UserRepo implements GenericCRUD<User> {
 
     @Override
     public List<User> readAll() {
-        List<User> users = new ArrayList<>();
         try (PreparedStatement preparedStatement =
                      dataSource.getConnection().prepareStatement(READ_ALL_USERS);
              ResultSet resultSet = preparedStatement.executeQuery()) {
-
-            while (resultSet.next()) {
-                users.add(getData(resultSet));
-            }
-
-            return users;
+            return getData(resultSet);
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        return users;
+        return null;
     }
 
 
@@ -148,7 +145,7 @@ public class UserRepo implements GenericCRUD<User> {
                      dataSource.getConnection().prepareStatement(READ_USER_BY_EMAIL)) {
 
             preparedStatement.setString(1, email);
-            return getData(preparedStatement.executeQuery());
+            return getData(preparedStatement.executeQuery()).iterator().next();
 
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
