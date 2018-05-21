@@ -55,7 +55,7 @@ public class IndexController {
     public Response registration(@Valid UserRegistrationDto user){
 
         if (validation.registerValidation(user))
-            return Response.status(Response.Status.CREATED).entity(user).build();
+            return Response.ok().entity(user).build();
 
         return  Response.status(Response.Status.FORBIDDEN).entity(user).build();
     }

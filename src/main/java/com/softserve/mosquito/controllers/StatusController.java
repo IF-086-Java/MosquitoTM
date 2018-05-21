@@ -1,6 +1,5 @@
 package com.softserve.mosquito.controllers;
 
-import com.softserve.mosquito.enitities.Priority;
 import com.softserve.mosquito.enitities.Status;
 import com.softserve.mosquito.services.StatusService;
 

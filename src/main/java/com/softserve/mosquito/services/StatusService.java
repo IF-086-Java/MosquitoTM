@@ -1,8 +1,6 @@
 package com.softserve.mosquito.services;
 
-import com.softserve.mosquito.enitities.Priority;
 import com.softserve.mosquito.enitities.Status;
-import com.softserve.mosquito.exceptions.EntityNotFoundException;
 import com.softserve.mosquito.repositories.StatusRepo;
 
 import java.util.List;
@@ -20,10 +18,11 @@ public class StatusService {
     public Status read(Long id) {
         Status read = statusRepo.read(id);
         if (read == null) {
-            throw new EntityNotFoundException("tatus with this Id " + id + " didn't found ");
+            //throw new EntityNotFoundException("tatus with this Id " + id + " didn't found ");
         }else {
             return read;
         }
+        return null;
     }
 
     public Status update(Status status) {

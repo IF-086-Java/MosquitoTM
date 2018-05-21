@@ -27,16 +27,16 @@ public class TaskRepo implements GenericCRUD<Task> {
                     "priority_id =?, status_id = ? WHERE task_id = ?";
     private static final String DELETE_TASK =
             "DELETE FROM tasks WHERE task_id = ?";
-    
+
     private static final String READ_TASK =
             "SELECT * FROM tasks t JOIN statuses USING(status_id) " +
-            "JOIN estimations e ON e.estimation_id=t.estimation_id " +
-            "JOIN priorities p ON t.priority_id=p.priority_id WHERE task_id=?;";
-    
+                    "JOIN estimations e ON e.estimation_id=t.estimation_id " +
+                    "JOIN priorities p ON t.priority_id=p.priority_id WHERE task_id=?;";
+
     private static final String READ_ALL_TASKS =
             "SELECT * FROM tasks t JOIN statuses USING(status_id) " +
-            "JOIN estimations e ON t.estimation_id=e.estimation_id " +
-            "JOIN priorities p ON t.priority_id=p.priority_id;";
+                    "JOIN estimations e ON t.estimation_id=e.estimation_id " +
+                    "JOIN priorities p ON t.priority_id=p.priority_id;";
 
     @Override
     public Task create(Task task) {
@@ -66,7 +66,6 @@ public class TaskRepo implements GenericCRUD<Task> {
         }
         return null;
     }
-
 
 
     @Override
@@ -100,63 +99,55 @@ public class TaskRepo implements GenericCRUD<Task> {
         }
     }
 
-//    private Task getData(ResultSet resultSet) {
-//        Task task = new Task();
-//        try {
-//            if (resultSet.next()) {
-//                task.setId(resultSet.getLong("task_id"));
-//                task.setParentId(resultSet.getLong("parent_id"));
-//                task.setOwnerId(resultSet.getLong("owner_id"));
-//                task.setWorkerId(resultSet.getLong("worker_id"));
-//                task.setEstimation(new Estimation(
-//                        resultSet.getLong(8),
-//                        resultSet.getInt(9),
-//                        resultSet.getInt(10)));
-//                task.setPriority(new Priority(
-//                        resultSet.getByte(11),
-//                        resultSet.getString(12)));
-//                task.setStatus(new Status(
-//                        resultSet.getByte(13),
-//                        resultSet.getString(14)));
-//                return task;
-//            } else {
-//                return task;
-//            }
-//        } catch (SQLException e) {
-//            LOGGER.error(e.getMessage(), e);
-//        }
-//        return task;
-//    }
+    private List<Task> getData(ResultSet resultSet) {
+        List<Task> tasks = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+                Task task = new Task();
+                task.setId(resultSet.getLong("task_id"));
+                task.setParentId(resultSet.getLong("parent_id"));
+                task.setOwnerId(resultSet.getLong("owner_id"));
+                task.setWorkerId(resultSet.getLong("worker_id"));
+                task.setEstimation(new Estimation(
+                        resultSet.getLong(8),
+                        resultSet.getInt(9),
+                        resultSet.getInt(10)));
+                task.setPriority(new Priority(
+                        resultSet.getByte(11),
+                        resultSet.getString(12)));
+                task.setStatus(new Status(
+                        resultSet.getByte(13),
+                        resultSet.getString(14)));
+                tasks.add(task);
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return tasks;
+    }
 
     @Override
     public Task read(Long id) {
-//        try (PreparedStatement preparedStatement =
-//                     dataSource.getConnection(.prepareStatement(READ_TASK)) {
-//
-//            preparedStatement.setLong(1, id);
-//            ResultSet resultSet = preparedStatement.executeQuery();
-//
-//            return getData(resultSet);
-//        } catch (SQLException e) {
-//            LOGGER.error(e.getMessage(), e);
-//        }
-        return null;
+        try (PreparedStatement preparedStatement =
+                     dataSource.getConnection().prepareStatement(READ_TASK)) {
+            preparedStatement.setLong(1, id);
+            return getData(preparedStatement.executeQuery()).iterator().next();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        }
+
     }
 
     @Override
     public List<Task> readAll() {
-        List<Task> tasks = new ArrayList<>();
-//        try (PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(READ_ALL_TASKS);
-//             ResultSet resultSet = preparedStatement.executeQuery()) {
-//
-//            while (resultSet.next()) {
-//                tasks.add(getData(resultSet));
-//            }
-//            return tasks;
-//
-//        } catch (SQLException e) {
-//            LOGGER.error(e.getMessage(), e);
-//        }
-        return tasks;
+        try (PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(READ_ALL_TASKS);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            return getData(resultSet);
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        }
+
     }
 }

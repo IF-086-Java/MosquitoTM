@@ -16,41 +16,41 @@ import javax.ws.rs.core.MediaType;
 public class CommentController {
 	
 	@POST
-	@Path("/{taskId}/comments")
+	@Path("/{task_id}/comments")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces({MediaType.TEXT_PLAIN})
-	public String createComment(@PathParam("taskId") long taskId,
+	@Produces({MediaType.APPLICATION_JSON})
+	public String createComment(@PathParam("task_id") long taskId,
 			@FormParam("comment") String comment) {
 		return "Created comment for task with ID:" + taskId + ". Text: " + comment;
 	}
 	
 	@GET
-	@Path("/{taskId}/comments")
-	@Produces({MediaType.TEXT_PLAIN})
-	public String getCommentsByTaskId(@PathParam("taskId") long taskId){
+	@Path("/{task_id}/comments")
+	@Produces({MediaType.APPLICATION_JSON})
+	public String getCommentsByTaskId(@PathParam("task_id") long taskId){
 		return "Returned all comments for task with ID: " + taskId;
 	}
 	
 	@GET
 	@Path("/{taskId}/comments/{commentId}")
-	@Produces({MediaType.TEXT_PLAIN})
+	@Produces({MediaType.APPLICATION_JSON})
 	public String getCommentsByCommentId(@PathParam("taskId") long taskId,
 			@PathParam("commentId") long commentId){
 		return "Returned comment with ID: " + commentId;
 	}
 	
 	@PUT
-	@Path("/{taskId}/comments/{commentId}")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces({MediaType.TEXT_PLAIN})
-	public String updateComment(@PathParam("taskId") long taskId,
-			@PathParam("commentId") long commentId,
+	@Path("/{task_id}/comments/{comment_id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_JSON})
+	public String updateComment(@PathParam("task_id") long taskId,
+			@PathParam("comment_id") long commentId,
 			@FormParam("comment") String comment){
 		return "Updated comment with ID:" + commentId + " New text: " + comment;
 	}
 	
 	@DELETE
-	@Path("/tasks/{taskId}/comments/{commentId}")
+	@Path("/{taskId}/comments/{commentId}")
 	public String deletComments(@PathParam("taskId") long taskId,
 			@PathParam("commentId") long commentId){
 		return "Deleted comment with ID:" + commentId + " (taskId: " + taskId + ")";
