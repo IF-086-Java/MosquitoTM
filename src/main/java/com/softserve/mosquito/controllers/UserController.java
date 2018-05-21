@@ -11,71 +11,65 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.softserve.mosquito.dtos.UserRegistrationDto;
+import com.softserve.mosquito.dtos.UserUpdateDto;
 import com.softserve.mosquito.enitities.User;
 import com.softserve.mosquito.repositories.UserRepo;
+import com.softserve.mosquito.services.UserService;
 
 @Path("/users")
 public class UserController {
 	
+	private UserService userService = new UserService();
+	
 	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String createUser(@FormParam("email") String email,
-							 @FormParam("first_name") String firstName,
-							 @FormParam("last_name") String lastName,
-							 @FormParam("specializations") List<String> specializations,
-							 @FormParam("password") String password) {
-		String testResult = "Created USER - " + firstName + " " + lastName 
-				+ " EMAIL: "  + email + " SPECIALIZATIN_IDs" + specializations;
-		
-		return testResult;
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public User createUser(User user) {
+		return userService.create(user);
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getAllUsers() {
-		
-		//TODO: Delete. Only for testing
-		return new UserRepo().readAll();
+		return userService.readAll();
 	}
 	
 	@GET
 	@Path("/{userId}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getUserById(@PathParam("userId") long userId) {
-		return "Returned user with ID: " + userId;
+	@Produces(MediaType.APPLICATION_JSON)
+	public User getUserById(@PathParam("userId") long userId) {
+		return userService.read(userId);
 	}
 	
 	@PUT
 	@Path("/{userId}")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String updateUser(@PathParam("userId") long userId,
-			@FormParam("email") String email,
-			@FormParam("first_name") String firstName,
-			@FormParam("last_name") String lastName,
-			@FormParam("specializations") List<String> specializations,
-			@FormParam("password") String password) {
-		String testResult = "Updated USER - " + firstName + " " + lastName 
-				+ " EMAIL: " + email 
-				+ " SPECIALIZATION_IDs: " + specializations;
-		
-		return testResult;
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public User updateUser(@PathParam("userId") long userId, UserUpdateDto userDto) {
+		User user = new User();
+		//TODO: Modify userService.update(User) => userService.update(UserUpdateDtp)
+		return userService.update(user);
 	}
 	
 	@DELETE
 	@Path("/{userId}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String deleteUserById(@PathParam("userId") long userId) {
-		return "Deleted user with ID: " + userId;
+	public void deleteUserById(@PathParam("userId") long userId) {
+		userService.delete(userService.read(userId));
 	}
 	
+	/*
+	 * Return all users with specific specialization
+	 * @param: specializationId - path parameter: users/specializations/2 (2 - Project Manager)
+	 */
 	@GET
 	@Path("/specializations/{specializationId}")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String getUsersBySpecializationId(@PathParam("specializationId") long specializationId) {
+		//TODO: Create in UserService method - getUsersBySpecialization()
 		return "Got all users with Specialization(ID: " + specializationId + ")" ;
 	}
 	

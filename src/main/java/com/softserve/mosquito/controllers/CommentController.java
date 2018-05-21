@@ -34,7 +34,8 @@ public class CommentController {
 	@GET
 	@Path("/{taskId}/comments/{commentId}")
 	@Produces({MediaType.TEXT_PLAIN})
-	public String getCommentsByCommentId(@PathParam("commentId") long commentId){
+	public String getCommentsByCommentId(@PathParam("taskId") long taskId,
+			@PathParam("commentId") long commentId){
 		return "Returned comment with ID: " + commentId;
 	}
 	
@@ -45,11 +46,11 @@ public class CommentController {
 	public String updateComment(@PathParam("taskId") long taskId,
 			@PathParam("commentId") long commentId,
 			@FormParam("comment") String comment){
-		return "Updated comment with ID:" + commentId + "(taskId: " + taskId + ") New text: " + comment;
+		return "Updated comment with ID:" + commentId + " New text: " + comment;
 	}
 	
 	@DELETE
-	@Path("/{taskId}/comments/{commentId}")
+	@Path("/tasks/{taskId}/comments/{commentId}")
 	public String deletComments(@PathParam("taskId") long taskId,
 			@PathParam("commentId") long commentId){
 		return "Deleted comment with ID:" + commentId + " (taskId: " + taskId + ")";

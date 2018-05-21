@@ -34,20 +34,17 @@ public class IndexController {
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response login(UserLoginDto userLoginDto, @Context HttpServletRequest request) {
-       if(validation.isLoginValid(userLoginDto)) {
-    	   User user = userService.getUserByEmail(userLoginDto.getEmail());
+    public Response login(@Valid UserLoginDto userLoginDto, @Context HttpServletRequest request) {
+       if(validation.isValidCredentials(userLoginDto)) {
     	   
     	   // Start session with authorized user
+    	   User user = userService.getUserByEmail(userLoginDto.getEmail());
     	   HttpSession session = request.getSession();
     	   session.setAttribute("user_id", user.getId());
-    	   session.setAttribute("name", user.getFirstName() + " " + user.getLastName());
     	   
-    	   //OR request.sendRedirect("/mytasks.html") OR Response.temporaryRedirect(location - "/mytasks.html")).build()
     	   return Response.status(Response.Status.OK).entity(user).build();
        }else {
-    	   //OR request.sendRedirect("/login.html") OR Response.temporaryRedirect(location - "/login.html").build()
-    	   return Response.status(Response.Status.UNAUTHORIZED).entity(new User()).build();
+    	   return Response.status(Response.Status.UNAUTHORIZED).build();
        }
     }
 
