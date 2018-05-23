@@ -22,10 +22,8 @@ public class AuthenticationFilter implements Filter{
 	@Override
 	public void init(FilterConfig fConfig) throws ServletException {
 		allowedUris = new ArrayList<>();
-		//TODO: Change url
-		allowedUris.add("login.html");
+		
 		allowedUris.add("login");
-		allowedUris.add("registration.html");
 		allowedUris.add("registration");
 	}
 	
@@ -48,12 +46,11 @@ public class AuthenticationFilter implements Filter{
 	    if(session != null && session.getAttribute("user_id") != null) {
 	    	filterChain.doFilter(request, response);
 	    }else {
-	    	//TODO Change url
-	    	req.getRequestDispatcher("/login").forward(req, res);
+	    	// OR res.sendRedirect("http://...") (STATUS CODE - 302 redirect).
+	    	res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 	    }	    
 		
 	}
-
 	
 	@Override
 	public void destroy() {
