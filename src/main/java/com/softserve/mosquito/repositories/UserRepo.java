@@ -20,13 +20,13 @@ public class UserRepo implements GenericCRUD<User> {
     private static final String CREATE_USER =
             "INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_USER =
-            "UPDATE users SET email = ?, password = ?, first_name = ?, last_name = ? WHERE user_id = ?";
+            "UPDATE users SET email = ?, password = ?, first_name = ?, last_name = ? WHERE id = ?";
     private static final String DELETE_USER =
-            "DELETE FROM users WHERE user_id = ?";
+            "DELETE FROM users WHERE id = ?";
 
 
     private static final String READ_USER =
-            "SELECT * FROM users WHERE user.user_id = ?";
+            "SELECT * FROM users WHERE user.id = ?";
     private static final String READ_ALL_USERS =
             "SELECT * FROM users";
     private static final String READ_USER_BY_EMAIL =
@@ -142,7 +142,7 @@ public class UserRepo implements GenericCRUD<User> {
         try {
             while (resultSet.next()) {
                 User user = new User();
-                user.setId(resultSet.getLong("user_id"));
+                user.setId(resultSet.getLong("id"));
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
                 user.setFirstName(resultSet.getString("first_name"));
