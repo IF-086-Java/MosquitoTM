@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,11 +47,11 @@ public class SpecializationRepo implements GenericCRUD<Specialization> {
 
     @Override
     public Specialization create(Specialization specialization) {
-        try (PreparedStatement statement =
-                     dataSource.getConnection().prepareStatement(CREATE_SPECIALIZATION)) {
-            statement.setString(1, specialization.getTitle());
-            statement.execute();
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SPECIALIZATION)) {
+            preparedStatement.setString(1, specialization.getTitle());
+            preparedStatement.execute();
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next())
                     return read(generatedKeys.getLong(1));
                 else
@@ -64,8 +65,8 @@ public class SpecializationRepo implements GenericCRUD<Specialization> {
 
     @Override
     public Specialization read(Long id) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(READ_SPECIALIZATION)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_SPECIALIZATION)) {
             preparedStatement.setLong(1, id);
             List<Specialization> result = parsData(preparedStatement.executeQuery());
             if (result.size() != 1) {
@@ -80,8 +81,8 @@ public class SpecializationRepo implements GenericCRUD<Specialization> {
 
     @Override
     public Specialization update(Specialization specialization) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(UPDATE_SPECIALIZATION)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SPECIALIZATION)) {
             preparedStatement.setString(1, specialization.getTitle());
             preparedStatement.setByte(2, specialization.getId());
             if (preparedStatement.executeUpdate() != 1) {
@@ -95,8 +96,8 @@ public class SpecializationRepo implements GenericCRUD<Specialization> {
 
     @Override
     public void delete(Specialization specialization) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(DELETE_SPECIALIZATION)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SPECIALIZATION)) {
             preparedStatement.setByte(1, specialization.getId());
             if (preparedStatement.executeUpdate() != 1) {
                 throw new SQLException("Specialization have not being deleted");
@@ -108,8 +109,8 @@ public class SpecializationRepo implements GenericCRUD<Specialization> {
 
     @Override
     public List<Specialization> readAll() {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(READ_ALL_SPECIALIZATIONS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_ALL_SPECIALIZATIONS)) {
             return parsData(preparedStatement.executeQuery());
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());

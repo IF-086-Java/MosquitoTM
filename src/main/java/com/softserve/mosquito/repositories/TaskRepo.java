@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,8 +41,8 @@ public class TaskRepo implements GenericCRUD<Task> {
 
     @Override
     public Task create(Task task) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(CREATE_TASK)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TASK)) {
             preparedStatement.setString(1, task.getName());
             preparedStatement.setLong(2, task.getParentId());
             preparedStatement.setLong(3, task.getOwnerId());
@@ -70,8 +71,8 @@ public class TaskRepo implements GenericCRUD<Task> {
 
     @Override
     public Task update(Task task) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(UPDATE_TASK)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_TASK)) {
             preparedStatement.setString(1, task.getName());
             preparedStatement.setLong(2, task.getWorkerId());
             preparedStatement.setByte(3, task.getPriority().getId());
@@ -90,12 +91,37 @@ public class TaskRepo implements GenericCRUD<Task> {
 
     @Override
     public void delete(Task task) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(DELETE_TASK)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_TASK)) {
             preparedStatement.setLong(1, task.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Task read(Long id) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_TASK)) {
+            preparedStatement.setLong(1, id);
+            return getData(preparedStatement.executeQuery()).iterator().next();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        }
+
+    }
+
+    @Override
+    public List<Task> readAll() {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_ALL_TASKS);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            return getData(resultSet);
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
         }
     }
 
@@ -124,30 +150,5 @@ public class TaskRepo implements GenericCRUD<Task> {
             LOGGER.error(e.getMessage(), e);
         }
         return tasks;
-    }
-
-    @Override
-    public Task read(Long id) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(READ_TASK)) {
-            preparedStatement.setLong(1, id);
-            return getData(preparedStatement.executeQuery()).iterator().next();
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage(), e);
-            return null;
-        }
-
-    }
-
-    @Override
-    public List<Task> readAll() {
-        try (PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement(READ_ALL_TASKS);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            return getData(resultSet);
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage(), e);
-            return null;
-        }
-
     }
 }

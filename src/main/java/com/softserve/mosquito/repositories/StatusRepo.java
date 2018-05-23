@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -47,8 +48,8 @@ public class StatusRepo implements GenericCRUD<Status> {
 
     @Override
     public Status create(Status status) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(CREATE_STATUS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_STATUS)) {
             preparedStatement.setString(1, status.getTitle());
             preparedStatement.execute();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
@@ -64,8 +65,8 @@ public class StatusRepo implements GenericCRUD<Status> {
 
     @Override
     public Status read(Long id) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(READ_STATUS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_STATUS)) {
             preparedStatement.setLong(1, id);
             List<Status> result = parseData(preparedStatement.executeQuery());
             if (result.size() != 1) {
@@ -80,8 +81,8 @@ public class StatusRepo implements GenericCRUD<Status> {
 
     @Override
     public Status update(Status status) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(UPDATE_STATUS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATUS)) {
             preparedStatement.setString(1, status.getTitle());
             preparedStatement.setByte(2, status.getId());
             if (preparedStatement.executeUpdate() != 1)
@@ -95,8 +96,8 @@ public class StatusRepo implements GenericCRUD<Status> {
 
     @Override
     public void delete(Status status) {
-        try (PreparedStatement preparedStatement
-                     = dataSource.getConnection().prepareStatement(DELETE_STATUS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATUS)) {
             preparedStatement.setByte(1, status.getId());
             if (preparedStatement.executeUpdate() != 1) {
                 throw new SQLException("Status have not being deleted");
@@ -108,8 +109,8 @@ public class StatusRepo implements GenericCRUD<Status> {
 
     @Override
     public List<Status> readAll() {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(READ_ALL_STATUSES)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_ALL_STATUSES)) {
             return parseData(preparedStatement.executeQuery());
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());

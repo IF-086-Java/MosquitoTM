@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -47,8 +48,8 @@ public class PriorityRepo implements GenericCRUD<Priority> {
 
     @Override
     public Priority create(Priority priority) {
-        try (PreparedStatement preparedStatement =
-                     dataSource.getConnection().prepareStatement(CREATE_PRIORITY)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_PRIORITY)) {
             preparedStatement.setString(1, priority.getTitle());
             preparedStatement.execute();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
@@ -67,8 +68,8 @@ public class PriorityRepo implements GenericCRUD<Priority> {
 
     @Override
     public Priority read(Long id) {
-        try (PreparedStatement preparedStatement
-                     = dataSource.getConnection().prepareStatement(READ_PRIORITY)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_PRIORITY)) {
             preparedStatement.setLong(1, id);
             List<Priority> result = parsData(preparedStatement.executeQuery());
             if (result.size() != 1) {
@@ -83,10 +84,11 @@ public class PriorityRepo implements GenericCRUD<Priority> {
 
     @Override
     public Priority update(Priority priority) {
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(UPDATE_PRIORITY)) {
-            statement.setString(1, priority.getTitle());
-            statement.setByte(2, priority.getId());
-            if (statement.executeUpdate() != 1) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRIORITY)) {
+            preparedStatement.setString(1, priority.getTitle());
+            preparedStatement.setByte(2, priority.getId());
+            if (preparedStatement.executeUpdate() != 1) {
                 throw new SQLException("Priorities have not being updated");
             }
         } catch (SQLException e) {
@@ -97,9 +99,10 @@ public class PriorityRepo implements GenericCRUD<Priority> {
 
     @Override
     public void delete(Priority priority) {
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(DELETE_PRIORITY)) {
-            statement.setByte(1, priority.getId());
-            if (statement.executeUpdate() != 1) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRIORITY)) {
+            preparedStatement.setByte(1, priority.getId());
+            if (preparedStatement.executeUpdate() != 1) {
                 throw new SQLException("Priority have not being deleted");
             }
         } catch (SQLException e) {
@@ -109,8 +112,9 @@ public class PriorityRepo implements GenericCRUD<Priority> {
 
     @Override
     public List<Priority> readAll() {
-        try (PreparedStatement statement = dataSource.getConnection().prepareStatement(DELETE_PRIORITY)) {
-            return parsData(statement.executeQuery());
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRIORITY)) {
+            return parsData(preparedStatement.executeQuery());
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
             return Collections.emptyList();
