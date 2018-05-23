@@ -1,16 +1,19 @@
 package com.softserve.mosquito.repositories;
 
-import com.softserve.mosquito.enitities.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.softserve.mosquito.enitities.User;
 
 public class UserRepo implements GenericCRUD<User> {
 
@@ -26,7 +29,7 @@ public class UserRepo implements GenericCRUD<User> {
 
 
     private static final String READ_USER =
-            "SELECT * FROM users WHERE user.id = ?";
+            "SELECT * FROM users WHERE id = ?";
     private static final String READ_ALL_USERS =
             "SELECT * FROM users";
     private static final String READ_USER_BY_EMAIL =
@@ -36,7 +39,7 @@ public class UserRepo implements GenericCRUD<User> {
     @Override
     public User create(User user) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getPassword());
@@ -99,10 +102,12 @@ public class UserRepo implements GenericCRUD<User> {
     @Override
     public User read(Long id) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(READ_USER)) {
+        	PreparedStatement preparedStatement = connection.prepareStatement(READ_USER)) {
 
             preparedStatement.setLong(1, id);
-            return getData(preparedStatement.executeQuery()).iterator().next();
+            List<User> users = getData(preparedStatement.executeQuery());
+            if(!users.isEmpty())
+            	return users.iterator().next();
 
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
@@ -129,7 +134,9 @@ public class UserRepo implements GenericCRUD<User> {
              PreparedStatement preparedStatement = connection.prepareStatement(READ_USER_BY_EMAIL)) {
 
             preparedStatement.setString(1, email);
-            return getData(preparedStatement.executeQuery()).iterator().next();
+            List<User> users = getData(preparedStatement.executeQuery());
+            if(!users.isEmpty())
+            	return users.iterator().next();
 
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
