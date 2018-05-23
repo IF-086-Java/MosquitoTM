@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -14,7 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.softserve.mosquito.dtos.UserUpdateDto;
+import com.softserve.mosquito.dtos.UserRegistrationDto;
 import com.softserve.mosquito.enitities.User;
 import com.softserve.mosquito.services.UserService;
 
@@ -47,7 +46,7 @@ public class UserController {
 	@Path("/{userId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public User updateUser(@PathParam("userId") long userId, UserUpdateDto userDto) {
+	public User updateUser(@PathParam("userId") long userId, UserRegistrationDto userDto) {
 		User user = new User();
 		//TODO: Modify userService.update(User) => userService.update(UserUpdateDtp)
 		return userService.update(user);
@@ -68,7 +67,7 @@ public class UserController {
 	@Path("/specializations/{specializationId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsersBySpecializationId(@PathParam("specializationId") long specializationId) {
-		//TODO: Create in UserService method - getUsersBySpecialization()
+		//TODO: Create in UserService method - getUsersBySpecialization(long specializationId)
 		return Response.ok().entity("All users with Specialization " + specializationId).build();
 	}
 	
