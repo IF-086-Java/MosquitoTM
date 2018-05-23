@@ -1,25 +1,22 @@
 package com.softserve.mosquito.dtos;
 
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class UserRegistrationDto {
 
-    @NotNull
     @Pattern(regexp = "^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,}$)",
             message = "user.email.pattern")
     private String email;
 
-    @NotNull
-    @Size(min = 2, max = 25, message = "user.first_name.pattern")
+    @Size(min = 2, max = 15, message = "${user.first_name.pattern}")
     private String firstName;
 
-    @NotNull
     @Size(min = 3, max = 25, message = "user.last_name.pattern")
     private String lastName;
 
-    @NotNull
     @Size(min = 8, message = "user.password.pattern")
     private String password;
 

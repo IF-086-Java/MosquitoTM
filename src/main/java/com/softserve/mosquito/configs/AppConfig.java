@@ -3,6 +3,8 @@ package com.softserve.mosquito.configs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import java.util.HashMap;
@@ -19,4 +21,5 @@ public class AppConfig extends Application {
         properties.put("jersey.config.server.provider.packages", "com.softserve.mosquito");
         return properties;
     }
+
 }

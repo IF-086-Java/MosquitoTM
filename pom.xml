@@ -47,7 +47,6 @@
             <version>${hibernate.verion}</version>
         </dependency>
 
-
         <!-- Hash-password -->
         <dependency>
             <groupId>commons-codec</groupId>

@@ -13,23 +13,23 @@ public class UserValidation {
 
     public boolean isValidCredentials(UserLoginDto userLoginDto) {
         if (userLoginDto != null && userLoginDto.getEmail() != null && userLoginDto.getPassword() != null) {
-	        String encryptedLoginPassword = DigestUtils.md5Hex(userLoginDto.getPassword().concat(salt));
-	        User user = userService.getUserByEmail(userLoginDto.getEmail());
-	        
-	        if (user != null) {
-	        	if (encryptedLoginPassword.equals(user.getPassword())) {
-	                return true;
-	            }
-	        }
-	    }
+            String encryptedLoginPassword = DigestUtils.md5Hex(userLoginDto.getPassword().concat(salt));
+            User user = userService.getUserByEmail(userLoginDto.getEmail());
+
+            if (user != null) {
+                if (encryptedLoginPassword.equals(user.getPassword())) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
     public boolean registerValidation(UserRegistrationDto userForRegister) {
 
         User user = userService.getUserByEmail(userForRegister.getEmail());
-       
-        if (user == null && userForRegister.getConfirmPassword().equals(userForRegister.getPassword())) {
+
+        if (user == null && isUserDataValid(userForRegister)) {
             String password = DigestUtils.md5Hex(userForRegister.getPassword().concat(salt));
             System.out.println(password);
             user = new User(userForRegister.getEmail(),
@@ -42,4 +42,13 @@ public class UserValidation {
         return false;
     }
 
+    private boolean isUserDataValid(UserRegistrationDto user) {
+        return user.getEmail().matches("^[_A-Za-z0-9-+]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,}$)")
+                && user.getFirstName().length() > 3
+                && user.getLastName().length() > 3
+                && user.getPassword().length() > 8
+                && user.getConfirmPassword().length() > 8
+                && user.getConfirmPassword().equals(user.getPassword());
+
+    }
 }
