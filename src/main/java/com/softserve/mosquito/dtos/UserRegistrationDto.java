@@ -11,7 +11,7 @@ public class UserRegistrationDto {
             message = "user.email.pattern")
     private String email;
 
-    @Size(min = 2, max = 15, message = "${user.first_name.pattern}")
+    @Size(min = 2, max = 15, message = "user.first_name.pattern")
     private String firstName;
 
     @Size(min = 3, max = 25, message = "user.last_name.pattern")

@@ -1,17 +1,11 @@
 package com.softserve.mosquito.repositories;
 
-import com.softserve.mosquito.enitities.Estimation;
-import com.softserve.mosquito.enitities.Priority;
-import com.softserve.mosquito.enitities.Status;
-import com.softserve.mosquito.enitities.Task;
+import com.softserve.mosquito.enitities.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +36,8 @@ public class TaskRepo implements GenericCRUD<Task> {
     @Override
     public Task create(Task task) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TASK)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TASK, Statement.RETURN_GENERATED_KEYS)) {
+
             preparedStatement.setString(1, task.getName());
             preparedStatement.setLong(2, task.getParentId());
             preparedStatement.setLong(3, task.getOwnerId());
@@ -105,6 +100,11 @@ public class TaskRepo implements GenericCRUD<Task> {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_TASK)) {
             preparedStatement.setLong(1, id);
+
+            List<Task> tasks = getData(preparedStatement.executeQuery());
+            if (!tasks.isEmpty())
+                return tasks.iterator().next();
+
             return getData(preparedStatement.executeQuery()).iterator().next();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);

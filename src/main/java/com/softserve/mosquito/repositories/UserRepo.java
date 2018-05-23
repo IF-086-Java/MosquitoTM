@@ -66,6 +66,22 @@ public class UserRepo implements GenericCRUD<User> {
     }
 
     @Override
+    public User read(Long id) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_USER)) {
+
+            preparedStatement.setLong(1, id);
+            List<User> users = getData(preparedStatement.executeQuery());
+            if (!users.isEmpty())
+                return users.iterator().next();
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return null;
+    }
+
+    @Override
     public User update(User user) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
@@ -94,27 +110,7 @@ public class UserRepo implements GenericCRUD<User> {
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-
     }
-
-
-
-    @Override
-    public User read(Long id) {
-        try (Connection connection = dataSource.getConnection();
-        	PreparedStatement preparedStatement = connection.prepareStatement(READ_USER)) {
-
-            preparedStatement.setLong(1, id);
-            List<User> users = getData(preparedStatement.executeQuery());
-            if(!users.isEmpty())
-            	return users.iterator().next();
-
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        return null;
-    }
-
 
     @Override
     public List<User> readAll() {
@@ -135,8 +131,8 @@ public class UserRepo implements GenericCRUD<User> {
 
             preparedStatement.setString(1, email);
             List<User> users = getData(preparedStatement.executeQuery());
-            if(!users.isEmpty())
-            	return users.iterator().next();
+            if (!users.isEmpty())
+                return users.iterator().next();
 
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
