@@ -68,15 +68,14 @@ public class StatusRepo implements GenericCRUD<Status> {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_STATUS)) {
             preparedStatement.setLong(1, id);
-            List<Status> result = parseData(preparedStatement.executeQuery());
-            if (result.size() != 1) {
-                throw new SQLException("Error with searching status by id");
+            List<Status> statuses = parseData(preparedStatement.executeQuery());
+            if (!statuses.isEmpty()) {
+                return statuses.iterator().next();
             }
-            return result.iterator().next();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
-            return null;
         }
+        return null;
     }
 
     @Override
@@ -85,23 +84,22 @@ public class StatusRepo implements GenericCRUD<Status> {
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATUS)) {
             preparedStatement.setString(1, status.getTitle());
             preparedStatement.setByte(2, status.getId());
-            if (preparedStatement.executeUpdate() != 1)
-                throw new SQLException("Statuses have not being updated");
+
+            int updatedRows = preparedStatement.executeUpdate();
+            if (updatedRows > 0)
+                return read(Long.valueOf(status.getId()));
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         }
         return status;
     }
 
-
     @Override
     public void delete(Status status) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_STATUS)) {
             preparedStatement.setByte(1, status.getId());
-            if (preparedStatement.executeUpdate() != 1) {
-                throw new SQLException("Status have not being deleted");
-            }
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         }

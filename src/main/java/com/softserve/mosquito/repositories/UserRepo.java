@@ -1,16 +1,19 @@
 package com.softserve.mosquito.repositories;
 
-import com.softserve.mosquito.enitities.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.softserve.mosquito.enitities.User;
 
 public class UserRepo implements GenericCRUD<User> {
 
@@ -20,13 +23,13 @@ public class UserRepo implements GenericCRUD<User> {
     private static final String CREATE_USER =
             "INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_USER =
-            "UPDATE users SET email = ?, password = ?, first_name = ?, last_name = ? WHERE user_id = ?";
+            "UPDATE users SET email = ?, password = ?, first_name = ?, last_name = ? WHERE id = ?";
     private static final String DELETE_USER =
-            "DELETE FROM users WHERE user_id = ?";
+            "DELETE FROM users WHERE id = ?";
 
 
     private static final String READ_USER =
-            "SELECT * FROM users WHERE user.user_id = ?";
+            "SELECT * FROM users WHERE id = ?";
     private static final String READ_ALL_USERS =
             "SELECT * FROM users";
     private static final String READ_USER_BY_EMAIL =
@@ -36,7 +39,7 @@ public class UserRepo implements GenericCRUD<User> {
     @Override
     public User create(User user) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getPassword());
@@ -55,6 +58,22 @@ public class UserRepo implements GenericCRUD<User> {
                     LOGGER.error("Creating user failed, no ID obtained.");
                 }
             }
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return null;
+    }
+
+    @Override
+    public User read(Long id) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_USER)) {
+
+            preparedStatement.setLong(1, id);
+            List<User> users = getData(preparedStatement.executeQuery());
+            if (!users.isEmpty())
+                return users.iterator().next();
 
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
@@ -91,25 +110,7 @@ public class UserRepo implements GenericCRUD<User> {
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-
     }
-
-
-
-    @Override
-    public User read(Long id) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(READ_USER)) {
-
-            preparedStatement.setLong(1, id);
-            return getData(preparedStatement.executeQuery()).iterator().next();
-
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        return null;
-    }
-
 
     @Override
     public List<User> readAll() {
@@ -129,7 +130,9 @@ public class UserRepo implements GenericCRUD<User> {
              PreparedStatement preparedStatement = connection.prepareStatement(READ_USER_BY_EMAIL)) {
 
             preparedStatement.setString(1, email);
-            return getData(preparedStatement.executeQuery()).iterator().next();
+            List<User> users = getData(preparedStatement.executeQuery());
+            if (!users.isEmpty())
+                return users.iterator().next();
 
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
@@ -142,7 +145,7 @@ public class UserRepo implements GenericCRUD<User> {
         try {
             while (resultSet.next()) {
                 User user = new User();
-                user.setId(resultSet.getLong("user_id"));
+                user.setId(resultSet.getLong("id"));
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
                 user.setFirstName(resultSet.getString("first_name"));

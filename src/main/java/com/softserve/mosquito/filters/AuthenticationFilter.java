@@ -23,11 +23,16 @@ public class AuthenticationFilter implements Filter{
 	public void init(FilterConfig fConfig) throws ServletException {
 		allowedUris = new ArrayList<>();
 		
+		// initialize allowed uri
 		allowedUris.add("login");
 		allowedUris.add("logout");
 		allowedUris.add("registration");
 	}
 	
+	/*
+	 * Check every request(except allowed uri) if user is authorized: 
+	 * if not authorized return UNAUTHORIZED Status code
+	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
@@ -47,7 +52,6 @@ public class AuthenticationFilter implements Filter{
 	    if(session != null && session.getAttribute("user_id") != null) {
 	    	filterChain.doFilter(request, response);
 	    }else {
-	    	// OR res.sendRedirect("http://...") (STATUS CODE - 302 redirect).
 	    	res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 	    }	    
 		

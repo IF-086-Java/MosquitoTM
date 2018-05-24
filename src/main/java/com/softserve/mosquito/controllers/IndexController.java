@@ -27,16 +27,12 @@ public class IndexController {
                 "<a href = \"/tasks\">Get tasks </a>";
     }
     
-    /**
-     * 
-     * */
     @POST
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(@Valid UserLoginDto userLoginDto, @Context HttpServletRequest request) {
        if(validation.isValidCredentials(userLoginDto)) {
-    	   
     	   // Start session with authorized user
     	   User user = userService.getUserByEmail(userLoginDto.getEmail());
     	   HttpSession session = request.getSession();
@@ -47,6 +43,7 @@ public class IndexController {
     	   return Response.status(Response.Status.UNAUTHORIZED).build();
        }
     }
+    
     
     @GET
     @Path("/logout")

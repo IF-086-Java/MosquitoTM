@@ -51,16 +51,21 @@ public class SpecializationRepo implements GenericCRUD<Specialization> {
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SPECIALIZATION)) {
             preparedStatement.setString(1, specialization.getTitle());
             preparedStatement.execute();
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0)
+                LOGGER.error("Set up specialization was failed");
+
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next())
                     return read(generatedKeys.getLong(1));
                 else
-                    throw new SQLException("Creating specialization failed, no ID obtained.");
+                    LOGGER.error("Set up specialization was failed");
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
-            return null;
         }
+        return null;
     }
 
     @Override
@@ -68,15 +73,14 @@ public class SpecializationRepo implements GenericCRUD<Specialization> {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_SPECIALIZATION)) {
             preparedStatement.setLong(1, id);
-            List<Specialization> result = parsData(preparedStatement.executeQuery());
-            if (result.size() != 1) {
-                throw new SQLException("Error with searching specialization by id");
+            List<Specialization> specializations = parsData(preparedStatement.executeQuery());
+            if (!specializations.isEmpty()) {
+                return specializations.iterator().next();
             }
-            return result.iterator().next();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
-            return null;
         }
+        return null;
     }
 
     @Override
@@ -85,9 +89,9 @@ public class SpecializationRepo implements GenericCRUD<Specialization> {
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SPECIALIZATION)) {
             preparedStatement.setString(1, specialization.getTitle());
             preparedStatement.setByte(2, specialization.getId());
-            if (preparedStatement.executeUpdate() != 1) {
-                throw new SQLException("Specialization have not being updated");
-            }
+            int updatedRows = preparedStatement.executeUpdate();
+            if (updatedRows > 0)
+                return specialization;
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         }
@@ -99,9 +103,7 @@ public class SpecializationRepo implements GenericCRUD<Specialization> {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SPECIALIZATION)) {
             preparedStatement.setByte(1, specialization.getId());
-            if (preparedStatement.executeUpdate() != 1) {
-                throw new SQLException("Specialization have not being deleted");
-            }
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         }
