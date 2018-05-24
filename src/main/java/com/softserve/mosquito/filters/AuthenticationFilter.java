@@ -24,6 +24,7 @@ public class AuthenticationFilter implements Filter{
 		allowedUris = new ArrayList<>();
 		
 		allowedUris.add("login");
+		allowedUris.add("logout");
 		allowedUris.add("registration");
 	}
 	

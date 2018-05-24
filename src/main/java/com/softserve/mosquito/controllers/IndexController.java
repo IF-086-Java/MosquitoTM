@@ -35,8 +35,7 @@ public class IndexController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(@Valid UserLoginDto userLoginDto, @Context HttpServletRequest request) {
-       //TODO uncomment. Just front-end test.
-    	//if(validation.isValidCredentials(userLoginDto)) {
+       if(validation.isValidCredentials(userLoginDto)) {
     	   
     	   // Start session with authorized user
     	   User user = userService.getUserByEmail(userLoginDto.getEmail());
@@ -44,9 +43,17 @@ public class IndexController {
     	   session.setAttribute("user_id", user.getId());
     	   
     	   return Response.status(Response.Status.OK).entity(user).build();
-       /*}else {
+       }else {
     	   return Response.status(Response.Status.UNAUTHORIZED).build();
-       }*/
+       }
+    }
+    
+    @GET
+    @Path("/logout")
+    public Response logout(@Context HttpServletRequest request) {
+    	HttpSession session = request.getSession();
+    	session.invalidate();
+    	return Response.status(Response.Status.OK).build();
     }
 
     @POST
